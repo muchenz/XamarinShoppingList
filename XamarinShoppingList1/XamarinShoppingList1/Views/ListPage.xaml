@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="XamarinShoppingList1.Views.ListPage">
+
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Delete"  Command="{Binding IsVisibleDeleteLabelCommand}" />
+        <ToolbarItem Text="Add/Edit"  Command="{Binding AddToolbarCommand}" />
+       
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>       
+        
+        
+        <StackLayout>
+            <StackLayout  HorizontalOptions="Center" VerticalOptions="EndAndExpand" IsVisible="{Binding IsVisibleDeleteLabel}">
+
+                <Label FontSize="Medium" TextColor="DodgerBlue" Text="Click on Item to delete." ></Label>
+            </StackLayout>
+            <Frame  IsVisible="{Binding IsVisibleAddItem}" BorderColor="Bisque"  BackgroundColor="Bisque" HasShadow="True" Padding="5">
+                <Frame  BorderColor="Bisque"  BackgroundColor="White" HasShadow="True" Padding="2">
+                    <StackLayout >
+
+                        <Entry Placeholder="Enter a name of new list" Text="{Binding AddListModel.Name}"></Entry>
+                        <Button Text="Save" HorizontalOptions="Center" Command="{Binding AddListCommand}"  ></Button>
+
+                    </StackLayout>
+                </Frame>
+            </Frame>
+            
+            <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Command="{Binding LoadItemsCommand}">
+
+            
+                    <!--<CollectionView  x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
+                ItemsSource="{Binding ListAggr}"  SelectionChangedCommand="{Binding SelectionChangedCommand}"  >-->
+
+
+                <CollectionView x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
+                ItemsSource="{Binding List}" SelectionChangedCommand="{Binding SelectionChangedCommand}" >
+                    <!--<CollectionView.Behaviors>
+                        <local:EventToCommandBehavior EventName="SelectionChanged"
+                                                  Command="{Binding SelectionChangedCommand}"
+                                                  CommandParameter="{Binding}"/>
+                    </CollectionView.Behaviors>-->
+                    <!--<d:ListView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>First Item</x:String>
+                        <x:String>Second Item</x:String>
+                        <x:String>Third Item</x:String>
+                        <x:String>Fourth Item</x:String>
+                        <x:String>Fifth Item</x:String>
+                        <x:String>Sixth Item</x:String>
+                    </x:Array>
+                    </d:ListView.ItemsSource>-->
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <StackLayout Padding="5" Margin="0"  >
+                                <Frame  BackgroundColor="WhiteSmoke" >
+                                    <Label Text="{Binding Name}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                   BackgroundColor="WhiteSmoke" VerticalOptions="Fill" 
+                                d:Text="Item descripton"
+                                LineBreakMode="NoWrap" 
+                                Style="{DynamicResource ListItemTextStyle}" 
+                                FontSize="20" />
+                                </Frame>
+                                <!--<StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding Path=BindingContext.ItemClickedCommand,
+                                        Source={x:Reference ListAggregationPageName}}" CommandParameter="{Binding}"
+                                        NumberOfTapsRequired="1" ></TapGestureRecognizer>
+                            </StackLayout.GestureRecognizers>-->
+
+                            </StackLayout>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>

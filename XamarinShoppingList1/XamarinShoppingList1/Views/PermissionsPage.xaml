@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:converterLocal="clr-namespace:XamarinShoppingList1.Converters" xmlns:local="clr-namespace:XamarinShoppingList1.Behaviors"
+             x:Class="XamarinShoppingList1.Views.PermissionsPage"
+             x:Name="PermissionsPageName">
+
+
+    <ContentPage.ToolbarItems>
+
+
+        <ToolbarItem Text="Invite user"  Command="{Binding InvitToolbarCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+    <StackLayout>
+
+        <Frame  IsVisible="{Binding IsVisibleInviteteItem}" BorderColor="Bisque"  BackgroundColor="Bisque" HasShadow="True" Padding="5">
+            <Frame  BorderColor="Bisque"  BackgroundColor="White" HasShadow="True" Padding="2">
+                <StackLayout >
+                    <StackLayout Orientation="Horizontal" Margin="0,10,0,0">
+                        <Label FontSize="Small" Text="Perrmision: " Margin="0, 8,0,0"></Label>
+
+                        <Picker SelectedIndex="{Binding InvitationNew.PermissionForPicker}" Margin="0,-11,0,0" HorizontalOptions="Center" WidthRequest="65"
+                                             >
+                            <Picker.Behaviors>
+                                            <local:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                  Command="{Binding Path=BindingContext.SelectedIndexChangedCommand, Source={x:Reference ItemsCollectionView2}}"
+                                                  CommandParameter="{Binding}"/>
+                                        </Picker.Behaviors>
+
+                            <Picker.Items>
+                                <x:String>Admin</x:String>
+                                <x:String>Editor</x:String>
+                                <x:String>Reader</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </StackLayout>
+                    
+                    <Entry Placeholder="Enter a user name" Text="{Binding InvitationNew.Name}"></Entry>
+                    <Button Text="Send invitation"  HorizontalOptions="Center" Command="{Binding SendInvitationCommand}"  ></Button>
+
+                </StackLayout>
+            </Frame>
+        </Frame>
+
+        <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Command="{Binding LoadItemsCommand}">
+
+
+            <!--<CollectionView  x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
+                ItemsSource="{Binding ListAggr}"  SelectionChangedCommand="{Binding SelectionChangedCommand}"  >-->
+
+
+            <CollectionView x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
+                ItemsSource="{Binding ListAggrForPerm}" SelectionChangedCommand="{Binding SelectionChangedCommand}" >
+                <!--<CollectionView.Behaviors>
+                        <local:EventToCommandBehavior EventName="SelectionChanged"
+                                                  Command="{Binding SelectionChangedCommand}"
+                                                  CommandParameter="{Binding}"/>
+                    </CollectionView.Behaviors>-->
+                <!--<d:ListView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>First Item</x:String>
+                        <x:String>Second Item</x:String>
+                        <x:String>Third Item</x:String>
+                        <x:String>Fourth Item</x:String>
+                        <x:String>Fifth Item</x:String>
+                        <x:String>Sixth Item</x:String>
+                    </x:Array>
+                    </d:ListView.ItemsSource>-->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <StackLayout Padding="5" Margin="0"  >
+                            <Frame  BackgroundColor="WhiteSmoke" >
+                                <Label Text="{Binding ListAggregatorEntity.ListAggregatorName}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                   BackgroundColor="WhiteSmoke" VerticalOptions="Fill" 
+                                d:Text="Item descripton"
+                                LineBreakMode="NoWrap" 
+                                Style="{DynamicResource ListItemTextStyle}" 
+                                FontSize="20" />
+                            </Frame>
+                            <!--<StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding Path=BindingContext.ItemClickedCommand,
+                                        Source={x:Reference ListAggregationPageName}}" CommandParameter="{Binding}"
+                                        NumberOfTapsRequired="1" ></TapGestureRecognizer>
+                            </StackLayout.GestureRecognizers>-->
+
+
+                        </StackLayout>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+
+
+        <RefreshView IsVisible="{Binding IsNotVisibleInvitationFrame}" IsRefreshing="{Binding IsBusy2, Mode=TwoWay}" Command="{Binding LoadItemsCommand2}" Margin="0,-80,0,0">
+
+            <CollectionView x:Name="ItemsCollectionView2" Margin="0,0, 0, 0" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
+                ItemsSource="{Binding SelectedItem.Users}" SelectionChangedCommand="{Binding SelectionChangedCommand}" >
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <StackLayout Padding="5,5,5,5"  >                     
+                        <Frame  BackgroundColor="WhiteSmoke" >
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                                    <ColumnDefinition  Width="1*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                            
+                            <StackLayout>
+                                <Label Text="{Binding Name}" HorizontalTextAlignment="Start" VerticalTextAlignment="Center"
+                                   BackgroundColor="WhiteSmoke" VerticalOptions="Fill" 
+                                d:Text="Item descripton"
+                                LineBreakMode="NoWrap" 
+                                Style="{DynamicResource ListItemTextStyle}" 
+                                FontSize="16" />
+                             
+                                    <StackLayout Orientation="Horizontal" Margin="0,10,0,0">
+                                    <Label FontSize="Small" Text="Perrmision: " Margin="0, 8,0,0"></Label>
+                                  
+                                    <Picker SelectedIndex="{Binding PermissionForPicker}" Margin="0,-11,0,0" HorizontalOptions="Center" WidthRequest="65"
+                                             >
+                                        <!--<Picker.Behaviors>
+                                            <local:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                  Command="{Binding Path=BindingContext.SelectedIndexChangedCommand, Source={x:Reference ItemsCollectionView2}}"
+                                                  CommandParameter="{Binding}"/>
+                                        </Picker.Behaviors>-->
+                                        
+                                        <Picker.Items>
+                                        <x:String> Admin </x:String>
+                                        <x:String> Editor </x:String>
+                                        <x:String> Reader </x:String>
+                                </Picker.Items>
+                            </Picker>
+                                    </StackLayout>
+
+                                </StackLayout>
+
+                                <Grid Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"></RowDefinition>
+                                        <RowDefinition Height="1*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Button  VerticalOptions="EndAndExpand" Margin="0,0,0,0" Text="Save" Command="{Binding Path=BindingContext.SelectedIndexChangedCommand, Source={x:Reference ItemsCollectionView2}}"
+                                                  CommandParameter="{Binding}"></Button>
+                                    <Button Grid.Row="1" VerticalOptions="EndAndExpand" Margin="0,0,0,0" Text="Delete" Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference ItemsCollectionView2}}"
+                                                  CommandParameter="{Binding}"></Button>
+                                </Grid>
+                            </Grid>
+                        </Frame>
+                        <!--<StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding Path=BindingContext.ItemClickedCommand,
+                                        Source={x:Reference ListAggregationPageName}}" CommandParameter="{Binding}"
+                                        NumberOfTapsRequired="1" ></TapGestureRecognizer>
+                            </StackLayout.GestureRecognizers>-->
+
+                    </StackLayout>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        </RefreshView>
+
+
+
+
+    </StackLayout>
+    
+
+</ContentPage>

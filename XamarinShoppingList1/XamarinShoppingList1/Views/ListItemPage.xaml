@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="XamarinShoppingList1.Views.ListItemPage"
+             xmlns:converterLocal="clr-namespace:XamarinShoppingList1.Converters" xmlns:local="clr-namespace:XamarinShoppingList1.Behaviors"
+             x:Name="ListItemPageName">
+
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="FrameStyle" TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="Gray" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Margin" Value="0, 12, 0, 0" />
+            </Style>
+        </ResourceDictionary>
+
+
+        <Style x:Key="StackLayoutStyle" TargetType="StackLayout"  >
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" >
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor"
+                                        Value="LightGray" />
+                        </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="DarkGray" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
+        <converterLocal:StatusToTextDecoration x:Key="StatusToTextDecoration"/>
+
+    </ContentPage.Resources>
+    <!--<NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal">
+        <Label Text="Hello World"  />
+        <Button Text="Add hub list" HorizontalOptions="Center" Command="{Binding AddListCommand}"  ></Button>
+        </StackLayout>
+    </NavigationPage.TitleView>-->
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Delete"  Command="{Binding IsVisibleDeleteLabelCommand}" />
+
+        <ToolbarItem Text="Add/Edit"  Command="{Binding AddToolbarCommand}" />             
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+      
+        <StackLayout>
+            <StackLayout  HorizontalOptions="Center" VerticalOptions="EndAndExpand" IsVisible="{Binding IsVisibleDeleteLabel}">
+
+                <Label FontSize="Medium" TextColor="DodgerBlue" Text="Click on Item to delete." ></Label>
+            </StackLayout>
+            <Frame  IsVisible="{Binding IsVisibleAddItem}" BorderColor="Bisque"  BackgroundColor="Bisque" HasShadow="True" Padding="5">
+                <Frame  BorderColor="Bisque"  BackgroundColor="White" HasShadow="True" Padding="2">
+                    <StackLayout >
+
+                        <Entry Placeholder="Enter a name of list item" Text="{Binding AddListItemModel.ListItemName}"></Entry>
+                        <Button Text="Save" HorizontalOptions="Center" Command="{Binding AddListItemCommand}"  ></Button>
+
+                    </StackLayout>
+                </Frame>
+            </Frame>
+            
+            <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Command="{Binding LoadItemsCommand}">
+
+
+
+                <CollectionView  x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
+                ItemsSource="{Binding ListItems}">
+                    <CollectionView.Behaviors>
+                        <local:EventToCommandBehavior EventName="SelectionChanged"
+                                                  Command="{Binding SelectionChangedCommand}"
+                                                  CommandParameter="{Binding}"/>
+                    </CollectionView.Behaviors>
+                    
+                    <!--<CollectionView.GestureRecognizers>
+                        <TapGestureRecognizer  Command="{Binding Path=BindingContext.SelectionChangedCommand,
+                                        Source={x:Reference ItemsCollectionView}}" CommandParameter="{Binding}"  
+                                        NumberOfTapsRequired="1"  ></TapGestureRecognizer>
+
+                    </CollectionView.GestureRecognizers>--> 
+
+
+                    <!--<d:ListView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>First Item</x:String>
+                        <x:String>Second Item</x:String>
+                        <x:String>Third Item</x:String>
+                        <x:String>Fourth Item</x:String>
+                        <x:String>Fifth Item</x:String>
+                        <x:String>Sixth Item</x:String>
+                    </x:Array>
+                    </d:ListView.ItemsSource>-->
+
+                    <CollectionView.ItemTemplate>
+                    
+                    <DataTemplate>
+                            <StackLayout Margin="0,1,0,1" BackgroundColor="White">
+
+                            <StackLayout Padding="3" Margin="0"  Style="{StaticResource StackLayoutStyle}" >
+                              
+                                <Grid HeightRequest="40" > <!--Style="{StaticResource FrameStyle}">-->
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                        <Label Text="{Binding NameForView}"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                   BackgroundColor="Beige" Opacity="1" VerticalOptions="Fill"  TextDecorations="{Binding State, Converter={StaticResource StatusToTextDecoration}}"
+                                d:Text="Item descripton"
+                                LineBreakMode="NoWrap" 
+                                Style="{DynamicResource ListItemTextStyle}" 
+                                FontSize="18" />
+                                </Grid>
+                                    <!--<StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding Path=BindingContext.ItemDoubleClickedCommand,
+                                        Source={x:Reference ItemsCollectionView}}" CommandParameter="{Binding}"  
+                                        NumberOfTapsRequired="2" Tapped="TapGestureRecognizer_Tapped" ></TapGestureRecognizer>
+                                    
+                            </StackLayout.GestureRecognizers>-->
+                                                         
+                            </StackLayout>
+                            </StackLayout>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

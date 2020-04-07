@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="XamarinShoppingList1.Views.InvitationsPage">
+    <ContentPage.Resources>
+        <Style x:Key="StackLayoutStyle" TargetType="StackLayout"  >
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" >
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="LightGray" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="DarkGray" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Manage"  Command="{Binding ManageCommand}" />
+
+     
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        
+        <StackLayout>
+            <Label Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <Label Margin="10" Text="{Binding InformationLabel}"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand"
+                  FontSize="Medium" TextColor="DodgerBlue" />
+            <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Command="{Binding LoadItemsCommand}">
+
+
+
+                <!--<CollectionView  x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
+                ItemsSource="{Binding ListAggr}"  SelectionChangedCommand="{Binding SelectionChangedCommand}"  >-->
+
+
+                <CollectionView x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
+                ItemsSource="{Binding Invitations}"  >
+                    <!--<CollectionView.Behaviors>
+                        <local:EventToCommandBehavior EventName="SelectionChanged"
+                                                  Command="{Binding SelectionChangedCommand}"
+                                                  CommandParameter="{Binding}"/>
+                    </CollectionView.Behaviors>-->
+                    <!--<d:ListView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>First Item</x:String>
+                        <x:String>Second Item</x:String>
+                        <x:String>Third Item</x:String>
+                        <x:String>Fourth Item</x:String>
+                        <x:String>Fifth Item</x:String>
+                        <x:String>Sixth Item</x:String>
+                    </x:Array>
+                    </d:ListView.ItemsSource>-->
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <StackLayout Padding="3" Margin="0"  Style="{StaticResource StackLayoutStyle}" >
+
+                                <StackLayout BackgroundColor="WhiteSmoke">
+                                    <Label Text="Invitation from:"></Label>
+                                        <Label Text="{Binding SenderName}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                   BackgroundColor="WhiteSmoke" VerticalOptions="Fill" 
+                                d:Text="Item descripton"
+                                LineBreakMode="NoWrap" 
+                                Style="{DynamicResource ListItemTextStyle}" 
+                                FontSize="16" />
+
+                                        <Label Text="To:"></Label>
+                                        <Label Text="{Binding ListAggregatorName}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                   BackgroundColor="WhiteSmoke" VerticalOptions="Fill" 
+                                d:Text="Item descripton"
+                                LineBreakMode="NoWrap" 
+                                Style="{DynamicResource ListItemTextStyle}" 
+                                FontSize="16" />
+                                    
+                                <!--<StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding Path=BindingContext.ItemClickedCommand,
+                                        Source={x:Reference ListAggregationPageName}}" CommandParameter="{Binding}"
+                                        NumberOfTapsRequired="1" ></TapGestureRecognizer>
+                            </StackLayout.GestureRecognizers>-->
+                                <Grid BackgroundColor="WhiteSmoke" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="1*" />
+                                    </Grid.ColumnDefinitions>
+                                        <Button Text="Accept" Grid.Column="1" Command="{Binding Path=BindingContext.AcceptCommand,
+                                             Source={x:Reference ItemsCollectionView}}" CommandParameter="{Binding}"></Button>
+                                        <Button Text="Reject" Grid.Column="3" Command="{Binding Path=BindingContext.RejectCommand,
+                                             Source={x:Reference ItemsCollectionView}}" CommandParameter="{Binding}"></Button>
+                                    </Grid>
+                                    </StackLayout>
+                               
+                            </StackLayout>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>
+
+<!--public int InvitationId { get; set; }
+        public string EmailAddress { get; set; }
+        public int PermissionLevel { get; set; }
+        public int ListAggregatorId { get; set; }
+        public string ListAggregatorName { get; set; }
+        public string SenderName { get; set; }
+
+        public int Id => InvitationId;-->

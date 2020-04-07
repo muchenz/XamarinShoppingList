@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             x:Class="XamarinShoppingList1.Views.LoginPage">
+    <ContentPage.Content>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0">
+            <Label Text="Welcome to Xamarin.Forms!"
+                
+                HorizontalOptions="CenterAndExpand" />
+            <StackLayout  HorizontalOptions="Center" VerticalOptions="EndAndExpand">
+
+                <Label FontSize="Medium" TextColor="DodgerBlue" Text="{Binding LoginError}" ></Label>
+            </StackLayout>
+            </StackLayout>
+            <StackLayout Grid.Row="1" Margin="20">
+                <Entry FontSize="Title" x:Name="UserName" Placeholder="email login" Text="{Binding Model.UserName }"></Entry>
+                <Entry FontSize="Title" IsPassword="True" Placeholder="password" Text="{Binding Model.Password}"></Entry>
+
+                <Button FontSize="Title" Text="Login" Command="{Binding LoginCommand}"></Button>
+              
+            </StackLayout>
+            <StackLayout Grid.Row="2" VerticalOptions="End" HorizontalOptions="Start">
+
+                <Button FontSize="Small" Text="Create Account" Command="{Binding CreateAccountCommand}" Margin="20"></Button>
+
+            </StackLayout>
+            
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
