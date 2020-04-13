@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -38,9 +39,7 @@ namespace XamarinShoppingList1.ViewModels
 
 
 
-            GetNewDataFromUser(App.User);
-
-           
+            GetNewDataFromUser(App.User);           
 
             base.InitAsyncCommand.Execute(null);
 
@@ -49,9 +48,7 @@ namespace XamarinShoppingList1.ViewModels
         {
             get
             {
-
                 return new Command(async () => {
-
 
                     if (isEdit)
                     {
@@ -70,12 +67,10 @@ namespace XamarinShoppingList1.ViewModels
                             Message.MessageDontHavePermission(Application.Current);
                             tempeditListItem.Name = tempName;
 
-
                         }
                         catch
                         {
                             tempeditListItem.Name = tempName;
-
                         }
 
                     }
@@ -91,7 +86,10 @@ namespace XamarinShoppingList1.ViewModels
                             Message.MessageDontHavePermission(Application.Current);
 
                         }
-                        catch { }
+                        catch (Exception ex)
+                        {
+                        
+                        }
 
                         if (list != null)
                             ListItems.Add(list);
@@ -186,8 +184,6 @@ namespace XamarinShoppingList1.ViewModels
                         IsVisibleDeleteLabel = true;
                         
                     }
-
-
                 });
 
             }
@@ -224,14 +220,11 @@ namespace XamarinShoppingList1.ViewModels
                 else
                 {
                     ListItems = new ObservableCollection<ListItem>(temLlist.ListItems);
-                }
-
-              
+                }              
             }
             catch
             {
                 ListItems = new ObservableCollection<ListItem>();
-
             }
         }
 

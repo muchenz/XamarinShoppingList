@@ -30,7 +30,8 @@ namespace XamarinShoppingList1.Services
             _httpClient = new HttpClient(handler);
 
 
-            _httpClient.BaseAddress = new Uri("https://192.168.8.222:5003/api/");
+            //_httpClient.BaseAddress = new Uri("https://192.168.8.222:5003/api/");
+            _httpClient.BaseAddress = new Uri("https://94.251.148.92:5003/api/");
 
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "BlazorServer");
 
@@ -111,6 +112,43 @@ namespace XamarinShoppingList1.Services
             return await Task.FromResult(returnedUser);
         }
 
+
+        public async Task<T> GetItem<T>(int itemId, int listAggregationId)
+        {
+            var querry = new QueryBuilder();
+            querry.Add("listAggregationId", listAggregationId.ToString());
+            querry.Add("itemId", itemId.ToString());
+
+            //string serializedUser = JsonConvert.SerializeObject(item);
+
+            string typeName = typeof(T).ToString().Split('.').LastOrDefault();
+
+            // var requestMessage = new HttpRequestMessage(HttpMethod.Post, "ListItem/AddItemListItemToList"+querry.ToString());
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, typeName + "/GetItem" + typeName + querry);
+
+
+            requestMessage.Content = new StringContent("");
+
+            //requestMessage.Content.Headers.ContentType
+            //  = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+
+            await SetRequestBearerAuthorizationHeader(requestMessage);
+            SetRequestAuthorizationLevelHeader(requestMessage, listAggregationId);
+
+
+            var response = await _httpClient.SendAsync(requestMessage);
+
+            var responseStatusCode = response.StatusCode;
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            var returnedItem = JsonConvert.DeserializeObject<T>(responseBody);
+
+
+            return await Task.FromResult(returnedItem);
+        }
+
         public async Task<T> AddItem<T>(int parentId, T item, int listAggregationId)
         {           
 
@@ -134,6 +172,7 @@ namespace XamarinShoppingList1.Services
 
 
             await SetRequestBearerAuthorizationHeader(requestMessage);
+            SetRequestAuthorizationLevelHeader(requestMessage, listAggregationId);
 
             var response = await _httpClient.SendAsync(requestMessage);
 

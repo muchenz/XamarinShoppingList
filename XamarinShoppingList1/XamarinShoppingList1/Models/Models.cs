@@ -137,6 +137,8 @@ namespace XamarinShoppingList1.Models
         public int ListAggregatorId { get; set; }
         public string ListAggregatorName { get; set; }
         public int Order { get; set; }
+        public int PermissionLevel { get; set; }
+
         public string Name
         {
             get { return ListAggregatorName; }

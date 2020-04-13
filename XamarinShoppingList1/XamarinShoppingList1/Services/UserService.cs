@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using XamarinShoppingList1.Models;
@@ -25,10 +26,11 @@ namespace XamarinShoppingList1.Services
 
           
              _httpClient = new HttpClient(handler);
-            
 
-            _httpClient.BaseAddress = new Uri("https://192.168.8.222:5003/api/");
-            
+
+            //_httpClient.BaseAddress = new Uri("https://192.168.8.222:5003/api/");
+            _httpClient.BaseAddress = new Uri("https://94.251.148.92:5003/api/");
+
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "BlazorServer");
            
         }
@@ -204,6 +206,7 @@ namespace XamarinShoppingList1.Services
 
             return await Task.FromResult(message.Message);
         }
+
         public async Task<List<ListAggregationForPermission>> GetListAggregationForPermissionAsync(string userName)
         {
 
@@ -274,6 +277,7 @@ namespace XamarinShoppingList1.Services
 
 
             await SetRequestBearerAuthorizationHeader(requestMessage);
+            SetRequestAuthorizationLevelHeader(requestMessage, listAggregationId);
 
             var response = await _httpClient.SendAsync(requestMessage);
 
@@ -286,6 +290,28 @@ namespace XamarinShoppingList1.Services
             return await Task.FromResult(message);
         }
 
+        void SetRequestAuthorizationLevelHeader(HttpRequestMessage httpRequestMessage, int listAggregationId)
+        {
+            var token = App.Token;
 
+            if (token != null)
+            {
+                httpRequestMessage.Headers.Add("listAggregationId", listAggregationId.ToString());
+
+                using (SHA256 mySHA256 = SHA256.Create())
+                {
+
+                    var bytes = Encoding.ASCII.GetBytes(token + listAggregationId.ToString());
+
+                    var hashBytes = mySHA256.ComputeHash(bytes);
+
+                    var hashString = Convert.ToBase64String(hashBytes);
+
+                    httpRequestMessage.Headers.Add("Hash", hashString);
+                }
+            }
+
+
+        }
     }
 }

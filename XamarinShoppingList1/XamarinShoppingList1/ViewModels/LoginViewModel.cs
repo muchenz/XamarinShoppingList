@@ -32,6 +32,7 @@ namespace XamarinShoppingList1.ViewModels
                 Model.UserName = Application.Current.Properties["UserName"].ToString();
             if (Application.Current.Properties.ContainsKey("Password"))
                 Model.Password = Application.Current.Properties["Password"].ToString();
+
             Model.PropertyChanged += LoginViewModel_PropertyChanged;
         }
 
@@ -61,7 +62,7 @@ namespace XamarinShoppingList1.ViewModels
                      token = await _userService.LoginAsync(Model.UserName, Model.Password);
                     LoginError = null;
                 }
-                catch
+                catch(Exception ex)
                 {
                     if (string.IsNullOrEmpty(App.Token))
                         LoginError = "Connection problem.";

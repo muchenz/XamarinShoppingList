@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" Visual="Material"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:XamarinShoppingList1.Behaviors"
              mc:Ignorable="d"
              x:Class="XamarinShoppingList1.Views.ListAggregationPage"
-             x:Name="ListAggregationPageName">
+             xmlns:converterLocal="clr-namespace:XamarinShoppingList1.Converters" 
+             x:Name="ListAggregationPageName" >
 
     <ContentPage.Resources>
         <Style  TargetType="StackLayout"  >
@@ -23,6 +24,9 @@
                 </VisualStateGroupList>
             </Setter>
         </Style>
+
+        <converterLocal:PermissionToColorConverter x:Key="PermissionToColorConverter"/>
+
     </ContentPage.Resources>
     
     <ContentPage.ToolbarItems>
@@ -41,8 +45,8 @@
 
                 <Label FontSize="Medium" TextColor="DodgerBlue" Text="Click on Item to delete." ></Label>
             </StackLayout>
-            <Frame  IsVisible="{Binding IsVisibleAddItem}" BorderColor="Bisque"  BackgroundColor="Bisque" HasShadow="True" Padding="5">
-                <Frame  BorderColor="Bisque"  BackgroundColor="White" HasShadow="True" Padding="2">
+            <Frame  IsVisible="{Binding IsVisibleAddItem}" BorderColor="Black"  BackgroundColor="Black" HasShadow="True" Padding="2" CornerRadius="10">
+                <Frame  BorderColor="Black"  BackgroundColor="White" HasShadow="True" Padding="2" CornerRadius="10">
                     <StackLayout >
 
                         <Entry Placeholder="Enter a name of hub list" Text="{Binding AddListAggregatorModel.ListAggregatorName}"></Entry>
@@ -51,6 +55,63 @@
                     </StackLayout>
                 </Frame>
             </Frame>
+
+            <Grid Margin="40, 10, 10, 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10"/>
+                        
+                    </Grid.RowDefinitions>
+                    <BoxView Color="Green" ></BoxView>
+                </Grid>
+                    
+                    <Label Margin="0,-5,0,0" Grid.Column="1" FontSize="Small" Text="Admin"></Label>
+
+                </Grid>
+
+                <Grid Grid.Column="1"> 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10"/>
+
+                        </Grid.RowDefinitions>
+                        <BoxView Color="Blue" ></BoxView>
+                    </Grid>
+
+                    <Label Margin="0,-5,0,0" Grid.Column="1" FontSize="Small" Text="Editor"></Label>
+
+                </Grid>
+                <Grid Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10"/>
+
+                        </Grid.RowDefinitions>
+                        <BoxView Color="Gray" ></BoxView>
+                    </Grid>
+
+                    <Label Margin="0,-5,0,0" Grid.Column="1" FontSize="Small" Text="Reader"></Label>
+
+                </Grid>
+            </Grid>
             
             <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Command="{Binding LoadItemsCommand}">
                 <CollectionView  x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
@@ -74,13 +135,30 @@
                     <DataTemplate>
                           
                         <StackLayout Padding="5" Margin="0"  >
+                                
+
                                 <Frame  BackgroundColor="WhiteSmoke" >
-                            <Label Text="{Binding Name}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                                   BackgroundColor="WhiteSmoke" VerticalOptions="Fill" 
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="10"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <BoxView Color="{Binding PermissionLevel, Converter={StaticResource PermissionToColorConverter}}" HorizontalOptions="Fill" VerticalOptions="FillAndExpand"></BoxView>
+                                        
+                                        <Label Margin="0,-10,0,5" Grid.Row="1" Grid.Column="1" Text="{Binding Name}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                   BackgroundColor="WhiteSmoke" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Grid.ColumnSpan="2" Grid.RowSpan="2"
                                 d:Text="Item descripton"
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
                                 FontSize="20" />
+
+
+                                    </Grid>
                                 </Frame>
                                 <!--<StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer  Command="{Binding Path=BindingContext.ItemClickedCommand,
