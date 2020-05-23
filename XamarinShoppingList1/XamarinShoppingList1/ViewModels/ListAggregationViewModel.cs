@@ -320,7 +320,9 @@ namespace XamarinShoppingList1.ViewModels
                 
                 _hubConnection = new HubConnectionBuilder().WithUrl("https://94.251.148.92:5013/chatHub", (opts) =>
                 {
-                    opts.HttpMessageHandlerFactory = (message) =>
+                 //   _hubConnection = new HubConnectionBuilder().WithUrl("https://192.168.8.222:91/chatHub", (opts) =>
+                  //  {
+                        opts.HttpMessageHandlerFactory = (message) =>
                     {
                         if (message is HttpClientHandler clientHandler)
                             // bypass SSL certificate

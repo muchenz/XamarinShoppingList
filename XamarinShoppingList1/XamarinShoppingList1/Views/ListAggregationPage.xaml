@@ -135,23 +135,23 @@
                     <DataTemplate>
                           
                         <StackLayout Padding="5" Margin="0"  >
-                                
 
-                                <Frame  BackgroundColor="WhiteSmoke" >
+
+                                <Frame  BackgroundColor="WhiteSmoke" Padding="5,20,5,20" >
                                     <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="10"/>
-                                            <RowDefinition Height="auto"/>
-                                        </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="10"/>
-                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="75*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <BoxView Color="{Binding PermissionLevel, Converter={StaticResource PermissionToColorConverter}}" HorizontalOptions="Fill" VerticalOptions="FillAndExpand"></BoxView>
-                                        
-                                        <Label Margin="0,-10,0,5" Grid.Row="1" Grid.Column="1" Text="{Binding Name}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                                   BackgroundColor="WhiteSmoke" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Grid.ColumnSpan="2" Grid.RowSpan="2"
+                                        <BoxView  Margin="0" Color="{Binding PermissionLevel, 
+                                            Converter={StaticResource PermissionToColorConverter}}" 
+                                                 HorizontalOptions="Fill" VerticalOptions="FillAndExpand" ></BoxView>
+
+
+
+                                        <Label Grid.Column="1" Text="{Binding Name}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                   BackgroundColor="WhiteSmoke"
                                 d:Text="Item descripton"
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 

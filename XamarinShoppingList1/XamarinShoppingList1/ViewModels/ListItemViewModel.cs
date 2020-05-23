@@ -39,7 +39,7 @@ namespace XamarinShoppingList1.ViewModels
 
 
 
-            GetNewDataFromUser(App.User);           
+            GetNewDataFromUser(App.User);
 
             base.InitAsyncCommand.Execute(null);
 
@@ -88,13 +88,13 @@ namespace XamarinShoppingList1.ViewModels
                         }
                         catch (Exception ex)
                         {
-                        
+
                         }
 
                         if (list != null)
                             ListItems.Add(list);
                     }
-                   
+
                     IsVisibleAddItem = false;
                     isEdit = false;
                     AddListItemModel = new ListItem();
@@ -139,7 +139,7 @@ namespace XamarinShoppingList1.ViewModels
             {
                 return new Command(() => {
                     var message = new DisplayAlertMessage();
-                   
+
 
                     message.Title = "Warning";
                     message.Message = $"You deleting '{nameItemToDelete}'.";
@@ -182,7 +182,7 @@ namespace XamarinShoppingList1.ViewModels
                     else
                     {
                         IsVisibleDeleteLabel = true;
-                        
+
                     }
                 });
 
@@ -202,7 +202,12 @@ namespace XamarinShoppingList1.ViewModels
             GetNewDataFromUser(App.User);
 
         }
-
+        ListAggregator _listAggr;
+        public ListAggregator ListAggr
+        {
+            get { return _listAggr; }
+            set { SetProperty(ref _listAggr, value); }
+        }
         private void GetNewDataFromUser(User arg)
         {
             if (arg == null) return;
@@ -210,7 +215,9 @@ namespace XamarinShoppingList1.ViewModels
             try
             {
                 var temLlist = arg.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault()
-               .Lists.Where(a => a.ListId == _list.ListId).FirstOrDefault(); 
+               .Lists.Where(a => a.ListId == _list.ListId).FirstOrDefault();
+
+                ListAggr = arg.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault();
 
                 if (temLlist == null)
                 {
@@ -220,7 +227,7 @@ namespace XamarinShoppingList1.ViewModels
                 else
                 {
                     ListItems = new ObservableCollection<ListItem>(temLlist.ListItems);
-                }              
+                }
             }
             catch
             {
@@ -232,18 +239,18 @@ namespace XamarinShoppingList1.ViewModels
         {
 
             MessagingCenter.Unsubscribe<ListAggregationViewModel, User>(this, "New Data");
-                        
+
         }
 
         public ICommand LoadItemsCommand
         {
             get
             {
-                return new Command( () =>
-                {
-                    MessagingCenter.Send(this, "Request for New Data");                                
+                return new Command(() =>
+               {
+                   MessagingCenter.Send(this, "Request for New Data");
 
-                });
+               });
 
             }
         }
@@ -283,7 +290,7 @@ namespace XamarinShoppingList1.ViewModels
                 return new Command(async (item) => {
 
 
-                    if (IsVisibleDeleteLabel &&  SelectedItem!=null)
+                    if (IsVisibleDeleteLabel && SelectedItem != null)
                     {
                         iDItemToDelete = SelectedItem.ListItemId;
                         nameItemToDelete = SelectedItem.ListItemName;
@@ -292,7 +299,7 @@ namespace XamarinShoppingList1.ViewModels
                     }
 
 
-                    if (IsVisibleAddItem && SelectedItem!=null)
+                    if (IsVisibleAddItem && SelectedItem != null)
                     {
                         editListItem = ListItems.Where(a => a.ListItemId == SelectedItem.ListItemId).First();
 
@@ -317,25 +324,27 @@ namespace XamarinShoppingList1.ViewModels
                         }
                         catch
                         {
-
+                           await  SetDeleyedSelectedItemToNull();
                         }
                     });
 
 
-                    await Task.Run(async () => {
-                        await Task.Delay(130);
-                        SelectedItem = null;
+                    await SetDeleyedSelectedItemToNull();
 
-                    });
-               
-                    //SelectedItem = tempSelectedItem;
-                    //return;
-                   
-                   
-                    //SelectedItem = null;
+                 
                 });
 
             }
+        }
+
+        async Task SetDeleyedSelectedItemToNull()
+        {
+            await Task.Run(async () =>
+            {
+                await Task.Delay(130);
+                SelectedItem = null;
+
+            });
         }
 
         ObservableCollection<ListItem> _listItems;// = new ObservableCollection<ListItem>();;

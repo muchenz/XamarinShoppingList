@@ -22,13 +22,13 @@
     </ContentPage.Content>
     <StackLayout>
 
-        <Frame  IsVisible="{Binding IsVisibleInviteteItem}" BorderColor="Bisque"  BackgroundColor="Bisque" HasShadow="True" Padding="5">
+        <Frame  IsVisible="{Binding IsVisibleInviteteItem}" BorderColor="Bisque"  BackgroundColor="Bisque" HasShadow="True" Padding="5" Margin="0,0,0,5">
             <Frame  BorderColor="Bisque"  BackgroundColor="White" HasShadow="True" Padding="2">
-                <StackLayout >
+                <StackLayout Margin="0,0,0,5">
                     <StackLayout Orientation="Horizontal" Margin="0,10,0,0">
                         <Label FontSize="Small" Text="Perrmision: " Margin="0, 8,0,0"></Label>
 
-                        <Picker SelectedIndex="{Binding InvitationNew.PermissionForPicker}" Margin="0,-11,0,0" HorizontalOptions="Center" WidthRequest="65"
+                        <Picker SelectedIndex="{Binding InvitationNew.PermissionForPicker}" Margin="0,-11,0,0" HorizontalOptions="Center" WidthRequest="85"
                                              >
                             <Picker.Behaviors>
                                             <local:EventToCommandBehavior EventName="SelectedIndexChanged"
@@ -45,13 +45,20 @@
                     </StackLayout>
                     
                     <Entry Placeholder="Enter a user name" Text="{Binding InvitationNew.Name}"></Entry>
-                    <Button Text="Send invitation"  HorizontalOptions="Center" Command="{Binding SendInvitationCommand}"  ></Button>
+                    <Button Text="Send invitation"  HorizontalOptions="Center" Command="{Binding SendInvitationCommand}" Margin="0,5,0,0" ></Button>
 
                 </StackLayout>
             </Frame>
         </Frame>
-
-        <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Command="{Binding LoadItemsCommand}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            
+        
+        <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Command="{Binding LoadItemsCommand}" Margin="0" MinimumHeightRequest="0">
 
 
             <!--<CollectionView  x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
@@ -59,7 +66,7 @@
 
 
             <CollectionView x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
-                ItemsSource="{Binding ListAggrForPerm}" SelectionChangedCommand="{Binding SelectionChangedCommand}" >
+                ItemsSource="{Binding ListAggrForPerm}" SelectionChangedCommand="{Binding SelectionChangedCommand}" Margin="0" MinimumHeightRequest="0">
                 <!--<CollectionView.Behaviors>
                         <local:EventToCommandBehavior EventName="SelectionChanged"
                                                   Command="{Binding SelectionChangedCommand}"
@@ -101,17 +108,17 @@
             </CollectionView>
         </RefreshView>
 
+            <BoxView Grid.Row="1" BackgroundColor="Black"></BoxView>
 
-
-        <RefreshView IsVisible="{Binding IsNotVisibleInvitationFrame}" IsRefreshing="{Binding IsBusy2, Mode=TwoWay}" Command="{Binding LoadItemsCommand2}" Margin="0,-80,0,0">
+        <RefreshView Grid.Row="2" IsVisible="{Binding IsNotVisibleInvitationFrame}" IsRefreshing="{Binding IsBusy2, Mode=TwoWay}" Command="{Binding LoadItemsCommand2}" Margin="0,0,0,0">
 
             <CollectionView x:Name="ItemsCollectionView2" Margin="0,0, 0, 0" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
                 ItemsSource="{Binding SelectedItem.Users}" SelectionChangedCommand="{Binding SelectionChangedCommand}" >
             <CollectionView.ItemTemplate>
                 <DataTemplate>
 
-                    <StackLayout Padding="5,5,5,5"  >                     
-                        <Frame  BackgroundColor="WhiteSmoke" >
+                    <StackLayout Padding="5"  >                     
+                        <Frame  BackgroundColor="WhiteSmoke" Padding="5">
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -174,7 +181,7 @@
         </RefreshView>
 
 
-
+        </Grid>
 
     </StackLayout>
     

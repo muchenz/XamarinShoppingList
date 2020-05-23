@@ -183,14 +183,22 @@ namespace XamarinShoppingList1.ViewModels
             }
         }
 
+        ListAggregator _listAggr;
+        public ListAggregator ListAggr
+        {
+            get { return _listAggr; }
+            set { SetProperty(ref _listAggr, value); }
+        }
+
         private void GetNewData(User arg)
         {
             if (arg== null) return;
           
             try
             {
-                ListAggregator temPlist = arg.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault(); 
-                
+                ListAggregator temPlist = arg.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault();
+                ListAggr = temPlist;
+
                 if (temPlist==null)
                 {
                     List = new ObservableCollection<List>();

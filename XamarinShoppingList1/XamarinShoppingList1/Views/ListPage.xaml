@@ -4,6 +4,8 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             xmlns:converterLocal="clr-namespace:XamarinShoppingList1.Converters" 
+             x:Name="ListPageView"
              x:Class="XamarinShoppingList1.Views.ListPage">
 
 
@@ -12,7 +14,10 @@
         <ToolbarItem Text="Add/Edit"  Command="{Binding AddToolbarCommand}" />
        
     </ContentPage.ToolbarItems>
-
+    <ContentPage.Resources>
+        <converterLocal:PermissionToColorConverter x:Key="PermissionToColorConverter"/>
+    </ContentPage.Resources>
+    
     <ContentPage.Content>       
         
         
@@ -60,19 +65,33 @@
                         <DataTemplate>
 
                             <StackLayout Padding="5" Margin="0"  >
-                                <Frame  BackgroundColor="WhiteSmoke" >
-                                    <Label Text="{Binding Name}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                                   BackgroundColor="WhiteSmoke" VerticalOptions="Fill" 
+                                <Frame  BackgroundColor="WhiteSmoke" Padding="5,20,5,20" >
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="75*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <BoxView Margin="0" Color="{Binding Path=BindingContext.ListAggr.PermissionLevel, Source={x:Reference ItemsCollectionView},
+                                            Converter={StaticResource PermissionToColorConverter}}" 
+                                                 HorizontalOptions="Fill" VerticalOptions="FillAndExpand" ></BoxView>
+
+                                       
+
+                                        <Label Grid.Column="1" Text="{Binding Name}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                   BackgroundColor="WhiteSmoke" VerticalOptions="Fill" HorizontalOptions="Center"
                                 d:Text="Item descripton"
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
                                 FontSize="20" />
+                                    </Grid>
                                 </Frame>
                                 <!--<StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer  Command="{Binding Path=BindingContext.ItemClickedCommand,
                                         Source={x:Reference ListAggregationPageName}}" CommandParameter="{Binding}"
                                         NumberOfTapsRequired="1" ></TapGestureRecognizer>
                             </StackLayout.GestureRecognizers>-->
+                                
 
                             </StackLayout>
 

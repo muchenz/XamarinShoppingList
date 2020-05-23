@@ -44,6 +44,8 @@
         </Style>
 
         <converterLocal:StatusToTextDecoration x:Key="StatusToTextDecoration"/>
+        <converterLocal:PermissionToColorConverter x:Key="PermissionToColorConverter"/>
+
 
     </ContentPage.Resources>
     <!--<NavigationPage.TitleView>
@@ -94,8 +96,13 @@
                                         Source={x:Reference ItemsCollectionView}}" CommandParameter="{Binding}"  
                                         NumberOfTapsRequired="1"  ></TapGestureRecognizer>
 
-                    </CollectionView.GestureRecognizers>--> 
+                    </CollectionView.GestureRecognizers>-->
+                    <CollectionView.GestureRecognizers>
+                        <Command="{Binding Path=BindingContext.SelectionChangedCommand,
+                                        Source={x:Reference ItemsCollectionView}}" CommandParameter="{Binding}"  
+                                        NumberOfTapsRequired="1"  ></Command>
 
+                    </CollectionView.GestureRecognizers>
 
                     <!--<d:ListView.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
@@ -111,16 +118,22 @@
                     <CollectionView.ItemTemplate>
                     
                     <DataTemplate>
-                            <StackLayout Margin="0,1,0,1" BackgroundColor="White">
+                            <StackLayout Margin="0,1,0,1" BackgroundColor="White" >
 
                             <StackLayout Padding="3" Margin="0"  Style="{StaticResource StackLayoutStyle}" >
-                              
-                                <Grid HeightRequest="40" > <!--Style="{StaticResource FrameStyle}">-->
+                                    <Grid BackgroundColor="Beige" HeightRequest="40">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="100*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackLayout BackgroundColor="Beige" Padding="5,5,0,0" Grid.ColumnSpan="2" >
+                                        <BoxView  Color="{Binding Path=BindingContext.ListAggr.PermissionLevel, Source={x:Reference ListItemPageName},
+                                            Converter={StaticResource PermissionToColorConverter}}" 
+                                                 HorizontalOptions="Fill" HeightRequest="30" ></BoxView>
+                                        </StackLayout>
 
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition></RowDefinition>
-                                    </Grid.RowDefinitions>
-                                        <Label Text="{Binding NameForView}"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+
+                                        <Label  Grid.Column="1" Text="{Binding NameForView}"  HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                                    BackgroundColor="Beige" Opacity="1" VerticalOptions="Fill"  TextDecorations="{Binding State, Converter={StaticResource StatusToTextDecoration}}"
                                 d:Text="Item descripton"
                                 LineBreakMode="NoWrap" 
