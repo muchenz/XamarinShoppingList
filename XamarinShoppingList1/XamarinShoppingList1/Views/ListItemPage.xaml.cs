@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XamarinShoppingList1.Helpers.DragAndDrop.Interfaces;
 using XamarinShoppingList1.ViewModels;
 
 namespace XamarinShoppingList1.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ListItemPage : ContentPage
+    public partial class ListItemPage : ContentPage, IDragAndDropContainer
     {        
 
         public ListItemPage(ListItemViewModel viewModel)
@@ -35,6 +36,11 @@ namespace XamarinShoppingList1.Views
             base.OnDisappearing();
             
             ((ListItemViewModel)BindingContext).OnDisappearingAsyncCommand.Execute(null);
+        }
+
+        private void PanGestureRecognizer_PanUpdated(object sender, PanUpdatedEventArgs e)
+        {
+
         }
     }
     

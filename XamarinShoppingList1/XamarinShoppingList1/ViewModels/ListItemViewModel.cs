@@ -40,7 +40,7 @@ namespace XamarinShoppingList1.ViewModels
 
 
             GetNewDataFromUser(App.User);
-
+          
             base.InitAsyncCommand.Execute(null);
 
         }
@@ -92,7 +92,19 @@ namespace XamarinShoppingList1.ViewModels
                         }
 
                         if (list != null)
+                        {
+                            //_listItemsTemp.Reverse();
+                            //_listItemsTemp.Add(list);
+                            //_listItemsTemp.Reverse();
+                            // ListItems.Clear();
+                            //  ListItems = new ObservableCollection<ListItem>(_listItemsTemp.ToList());
+                            //  ListItems.CollectionChanged += ListItems_CollectionChanged;
                             ListItems.Add(list);
+                          //  SetAndSend(_listItemsTemp);
+                           // OnPropertyChanged(nameof(ListItems));
+                            //MessagingCenter.Send(this, "Save And Refresh New Order");
+
+                        }
                     }
 
                     IsVisibleAddItem = false;
@@ -154,6 +166,7 @@ namespace XamarinShoppingList1.ViewModels
                                 await _listItemService.Delete<ListItem>(iDItemToDelete, _listAggregator.ListAggregatorId);
 
                                 ListItems.Remove(ListItems.Single(a => a.ListItemId == iDItemToDelete));
+                               // ListItems.Remove(ListItems.Single(a => a.ListItemId == iDItemToDelete));
                             }
                             catch { }
                         }
@@ -215,24 +228,57 @@ namespace XamarinShoppingList1.ViewModels
             try
             {
                 var temLlist = arg.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault()
-               .Lists.Where(a => a.ListId == _list.ListId).FirstOrDefault();
+               .Lists.Where(a => a.ListId == _list.ListId).FirstOrDefault().ListItems.ToList();
 
                 ListAggr = arg.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault();
 
                 if (temLlist == null)
                 {
-                    ListItems = new ObservableCollection<ListItem>();
 
+                    //ListItems = new ObservableCollection<ListItem>();
+
+                    ListItems.Clear();
                 }
                 else
                 {
-                    ListItems = new ObservableCollection<ListItem>(temLlist.ListItems);
+                    //_listItemsTemp = new List<ListItem>(temLlist);
+
+                    ListItems.CollectionChanged-= ListItems_CollectionChanged;
+                    ListItems.Clear();
+                    //ListItems = new ObservableCollection<ListItem>(temLlist);
+                    temLlist.ForEach(a => ListItems.Add(a));
+                    ListItems.CollectionChanged += ListItems_CollectionChanged;                  
                 }
+
             }
             catch
             {
-                ListItems = new ObservableCollection<ListItem>();
+                    ListItems.Clear();
+
+                //ListItems = new ObservableCollection<ListItem>();
+
             }
+        }
+
+        private void ListItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+
+            SetAndSend(ListItems);
+
+        }
+
+
+        void SetAndSend(ICollection<ListItem> collection)
+        {
+
+            var tempListItem = App.User.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault()
+             .Lists.Where(a => a.ListId == _list.ListId).FirstOrDefault();
+
+            tempListItem.ListItems = new List<ListItem>(collection) as ICollection<ListItem>;
+            //tempListItem.ListItems = ListItems as ICollection<ListItem>;
+                
+
+            MessagingCenter.Send(this, "Save And Refresh New Order");
         }
 
         protected override async Task OnDisappearingAsync()
@@ -254,13 +300,46 @@ namespace XamarinShoppingList1.ViewModels
 
             }
         }
+
+        ListItem oldItem;
+        DateTime oldTime;
         public ICommand ItemDoubleClickedCommand
         {
             get
             {
                 return new Command<ListItem>(async (item) => {
+                   
+
+                    if (IsVisibleDeleteLabel)
+                    {
+                        iDItemToDelete = item.ListItemId;
+                        nameItemToDelete = item.ListItemName;
+                        DeleteCommand.Execute(null);
+                        return;
+                    }
+
+
+                    if (IsVisibleAddItem)
+                    {
+                        editListItem = ListItems.Where(a => a.ListItemId == item.ListItemId).First();
+
+                        AddListItemModel.ListItemName = editListItem.ListItemName;
+                        isEdit = true;
+                    }
+
 
                     if (item == null) return;
+
+                    var tempItem = (ListItem)item;
+
+                    if (oldItem != tempItem || DateTime.Now.Subtract(oldTime).TotalMilliseconds>500)
+                    {
+                        oldItem = tempItem;
+                        oldTime = DateTime.Now;
+                        return;
+                    }
+                    
+
 
                     SelectedItem = item;
 
@@ -288,7 +367,7 @@ namespace XamarinShoppingList1.ViewModels
             get
             {
                 return new Command(async (item) => {
-
+                   // SelectedItem = item as ListItem;
 
                     if (IsVisibleDeleteLabel && SelectedItem != null)
                     {
@@ -347,7 +426,10 @@ namespace XamarinShoppingList1.ViewModels
             });
         }
 
-        ObservableCollection<ListItem> _listItems;// = new ObservableCollection<ListItem>();;
+
+        List<ListItem> _listItemsTemp = new List<ListItem>();
+
+        ObservableCollection<ListItem> _listItems = new ObservableCollection<ListItem>();
 
         public ObservableCollection<ListItem> ListItems
         {
@@ -355,6 +437,7 @@ namespace XamarinShoppingList1.ViewModels
             set
             {
                 _listItems = value;
+                //OnPropertyChanged(nameof(ListItems));
                 OnPropertyChanged();
 
             }
@@ -365,7 +448,17 @@ namespace XamarinShoppingList1.ViewModels
         {
 
         }
-       
+
+        private async Task<ObservableCollection<ListItem>> LoadListItemsAsync()
+        {
+          
+
+            // Test the drag and drop lock
+            // result.First().Lock();
+            // result.Last().Lock();
+            return await Task.FromResult(ListItems);
+        }
+
     }
 
 

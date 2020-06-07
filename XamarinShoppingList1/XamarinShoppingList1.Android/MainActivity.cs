@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using System.Net.Security;
 using System.Net;
+using Sharpnado.Presentation.Forms.Droid;
 
 namespace XamarinShoppingList1.Droid
 {
@@ -26,6 +27,8 @@ namespace XamarinShoppingList1.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Xamarin.Forms.FormsMaterial.Init(this, savedInstanceState);
+
+            SharpnadoInitializer.Initialize();
 
             LoadApplication(new App());
         }

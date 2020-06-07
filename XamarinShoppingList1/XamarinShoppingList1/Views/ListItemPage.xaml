@@ -6,6 +6,8 @@
              mc:Ignorable="d"
              x:Class="XamarinShoppingList1.Views.ListItemPage"
              xmlns:converterLocal="clr-namespace:XamarinShoppingList1.Converters" 
+             xmlns:renderedViews="clr-namespace:Sharpnado.Presentation.Forms.RenderedViews;assembly=Sharpnado.Presentation.Forms"
+              xmlns:effects="clr-namespace:Sharpnado.Presentation.Forms.Effects;assembly=Sharpnado.Presentation.Forms"
              xmlns:local="clr-namespace:XamarinShoppingList1.Behaviors"
              x:Name="ListItemPageName">
 
@@ -43,6 +45,27 @@
             </Setter>
         </Style>
 
+        <Style x:Key="StackLayoutStyle2" TargetType="StackLayout"  >
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" >
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="Black" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="Black" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+
         <converterLocal:StatusToTextDecoration x:Key="StatusToTextDecoration"/>
         <converterLocal:PermissionToColorConverter x:Key="PermissionToColorConverter"/>
 
@@ -63,7 +86,11 @@
 
     <ContentPage.Content>
       
-        <StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <StackLayout  HorizontalOptions="Center" VerticalOptions="EndAndExpand" IsVisible="{Binding IsVisibleDeleteLabel}">
 
                 <Label FontSize="Medium" TextColor="DodgerBlue" Text="Click on Item to delete." ></Label>
@@ -78,56 +105,48 @@
                     </StackLayout>
                 </Frame>
             </Frame>
-            
-            <RefreshView IsRefreshing="{Binding IsBusy, Mode=TwoWay}" Command="{Binding LoadItemsCommand}">
 
 
 
-                <CollectionView  x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
-                ItemsSource="{Binding ListItems}">
-                    <CollectionView.Behaviors>
-                        <local:EventToCommandBehavior EventName="SelectionChanged"
-                                                  Command="{Binding SelectionChangedCommand}"
-                                                  CommandParameter="{Binding}"/>
-                    </CollectionView.Behaviors>
-                    
-                    <!--<CollectionView.GestureRecognizers>
-                        <TapGestureRecognizer  Command="{Binding Path=BindingContext.SelectionChangedCommand,
+
+            <renderedViews:HorizontalListView  x:Name="HorizontalListView" Grid.Row="1"
+                
+                 ItemsSource="{Binding ListItems}"
+                     ListLayout="Grid"
+                   EnableDragAndDrop="True"
+                   ItemWidth="600"
+                   ItemHeight="45" Margin="0" 
+                    CollectionPadding="0,0"                            
+                      ColumnCount="1"
+                                                 SnapStyle="Center"
+                >
+
+                <renderedViews:HorizontalListView.GestureRecognizers>
+                    <!--<TapGestureRecognizer  Command="{Binding Path=BindingContext.SelectionChangedCommand,
                                         Source={x:Reference ItemsCollectionView}}" CommandParameter="{Binding}"  
-                                        NumberOfTapsRequired="1"  ></TapGestureRecognizer>
+                                        NumberOfTapsRequired="2"  ></TapGestureRecognizer>-->
 
-                    </CollectionView.GestureRecognizers>-->
-                    <CollectionView.GestureRecognizers>
-                        <Command="{Binding Path=BindingContext.SelectionChangedCommand,
-                                        Source={x:Reference ItemsCollectionView}}" CommandParameter="{Binding}"  
-                                        NumberOfTapsRequired="1"  ></Command>
+                </renderedViews:HorizontalListView.GestureRecognizers>
 
-                    </CollectionView.GestureRecognizers>
-
-                    <!--<d:ListView.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>First Item</x:String>
-                        <x:String>Second Item</x:String>
-                        <x:String>Third Item</x:String>
-                        <x:String>Fourth Item</x:String>
-                        <x:String>Fifth Item</x:String>
-                        <x:String>Sixth Item</x:String>
-                    </x:Array>
-                    </d:ListView.ItemsSource>-->
-
-                    <CollectionView.ItemTemplate>
-                    
+                <renderedViews:HorizontalListView.ItemTemplate>
                     <DataTemplate>
-                            <StackLayout Margin="0,1,0,1" BackgroundColor="White" >
 
-                            <StackLayout Padding="3" Margin="0"  Style="{StaticResource StackLayoutStyle}" >
+
+                        <renderedViews:DraggableViewCell>
+                            <ContentView>
+                                <StackLayout Padding="3" Margin="0"  Style="{StaticResource StackLayoutStyle}" 
+                                             effects:ViewEffect.TouchFeedbackColor="LightCoral" 
+                                             effects:TapCommandEffect.Tap="{Binding Path=BindingContext.ItemDoubleClickedCommand,
+                                        Source={x:Reference HorizontalListView}}"
+                                                                        effects:TapCommandEffect.TapParameter="{Binding}">
+
                                     <Grid BackgroundColor="Beige" HeightRequest="40">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="1*"/>
                                             <ColumnDefinition Width="100*"/>
                                         </Grid.ColumnDefinitions>
                                         <StackLayout BackgroundColor="Beige" Padding="5,5,0,0" Grid.ColumnSpan="2" >
-                                        <BoxView  Color="{Binding Path=BindingContext.ListAggr.PermissionLevel, Source={x:Reference ListItemPageName},
+                                            <BoxView  Color="{Binding Path=BindingContext.ListAggr.PermissionLevel, Source={x:Reference ListItemPageName},
                                             Converter={StaticResource PermissionToColorConverter}}" 
                                                  HorizontalOptions="Fill" HeightRequest="30" ></BoxView>
                                         </StackLayout>
@@ -139,23 +158,26 @@
                                 LineBreakMode="NoWrap" 
                                 Style="{DynamicResource ListItemTextStyle}" 
                                 FontSize="18" />
-                                </Grid>
+                                    </Grid>
                                     <!--<StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer  Command="{Binding Path=BindingContext.ItemDoubleClickedCommand,
-                                        Source={x:Reference ItemsCollectionView}}" CommandParameter="{Binding}"  
-                                        NumberOfTapsRequired="2" Tapped="TapGestureRecognizer_Tapped" ></TapGestureRecognizer>
+                                        <TapGestureRecognizer  Command="{Binding Path=BindingContext.ItemDoubleClickedCommand,
+                                        Source={x:Reference HorizontalListView}}" CommandParameter="{Binding}"  
+                                        NumberOfTapsRequired="2"  ></TapGestureRecognizer>                                        
                                     
                             </StackLayout.GestureRecognizers>-->
-                                                         
-                            </StackLayout>
-                            </StackLayout>
 
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </RefreshView>
+                                </StackLayout>
 
 
-        </StackLayout>
+                            </ContentView>
+                        </renderedViews:DraggableViewCell>
+
+
+
+                    </DataTemplate>
+                </renderedViews:HorizontalListView.ItemTemplate>
+
+            </renderedViews:HorizontalListView>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
