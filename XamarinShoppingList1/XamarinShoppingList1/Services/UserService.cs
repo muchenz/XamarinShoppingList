@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using XamarinShoppingList1.Models;
 
@@ -15,9 +17,9 @@ namespace XamarinShoppingList1.Services
 
 
         private readonly HttpClient _httpClient;
-     
-      
-        public UserService(HttpClient httpClient)
+        private readonly IConfiguration _configuration;
+
+        public UserService(HttpClient httpClient, IConfiguration configuration)
         {
             //_httpClient = httpClient;
 
@@ -27,12 +29,14 @@ namespace XamarinShoppingList1.Services
           
              _httpClient = new HttpClient(handler);
 
+            var baseAddress = configuration.GetSection("AppSettings")["ShoppingWebAPIBaseAddress"];
+            _httpClient.BaseAddress = new Uri(baseAddress);
 
             //_httpClient.BaseAddress = new Uri("https://192.168.8.222:5003/api/");
-            _httpClient.BaseAddress = new Uri("https://94.251.148.92:5003/api/");
+           // _httpClient.BaseAddress = new Uri("https://94.251.148.92:5003/api/");
 
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "BlazorServer");
-           
+            _configuration = configuration;
         }
 
 
@@ -50,8 +54,39 @@ namespace XamarinShoppingList1.Services
             }
         }
 
+        public async Task<MessageAndStatusAndData<TokenAndEmailData>> GetTokenFromFacebookAccessToken(string accessFacebookToken)
+        {
+            var querry = new QueryBuilder();
+            querry.Add("access_token", accessFacebookToken);
 
-        public async Task<string> LoginAsync(string userName, string password)
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "User/FacebookToken" + querry.ToString());
+
+            // await SetRequestBearerAuthorizationHeader(requestMessage);
+
+            requestMessage.Content = new StringContent("");
+
+            requestMessage.Content.Headers.ContentType
+                = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+            MessageAndStatusAndData<TokenAndEmailData> message = null;
+            try
+            {
+
+
+                var response = await _httpClient.SendAsync(requestMessage);
+
+                var data = await response.Content.ReadAsStringAsync();
+
+                message = JsonConvert.DeserializeObject<MessageAndStatusAndData<TokenAndEmailData>>(data);
+            }
+            catch
+            {
+                message = new MessageAndStatusAndData<TokenAndEmailData>(null, true, "Connection problem.");
+            }
+            return await Task.FromResult(message);
+        }
+
+        public async Task<MessageAndStatus> LoginAsync(string userName, string password)
         {
 
             var querry = new QueryBuilder();
@@ -67,18 +102,22 @@ namespace XamarinShoppingList1.Services
             requestMessage.Content.Headers.ContentType
                 = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
+            MessageAndStatus message = null;
+            try
+            {
+                                
 
-            var response = await _httpClient.SendAsync(requestMessage);
+                var response = await _httpClient.SendAsync(requestMessage);
 
-            var data = await response.Content.ReadAsStringAsync();
+                var data = await response.Content.ReadAsStringAsync();
 
-            var message = JsonConvert.DeserializeObject<MessageAndStatus>(data);
-
-
-            if (message!=null && message.Status=="OK")
-                App.Token = message.Message;
-
-            return await Task.FromResult(message.Message);
+                 message = JsonConvert.DeserializeObject<MessageAndStatus>(data);
+            }
+            catch
+            {
+                message = new MessageAndStatus { Status = "ERROR", Message = "Connection problem." };
+            }
+            return await Task.FromResult(message);
 
         }
 

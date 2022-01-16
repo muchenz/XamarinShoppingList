@@ -168,7 +168,15 @@ namespace XamarinShoppingList1.ViewModels
                                 ListItems.Remove(ListItems.Single(a => a.ListItemId == iDItemToDelete));
                                // ListItems.Remove(ListItems.Single(a => a.ListItemId == iDItemToDelete));
                             }
-                            catch { }
+                            catch (WebPermissionException ex)
+                            {
+                                Message.MessageDontHavePermission(Application.Current);
+
+                            }
+                            catch
+                            {
+
+                            }
                         }
                     };
                     MessagingCenter.Send<Application, DisplayAlertMessage>(Application.Current, "ShowAlert", message);
@@ -391,7 +399,7 @@ namespace XamarinShoppingList1.ViewModels
                     await Task.Run(async () => {
                         if (tempSelectedItem == null) return;
 
-                        if (!Comarer.Compare(tempSelectedItem)) return;
+                        if (!Comparer.Compare(tempSelectedItem)) return;
 
                         if (tempSelectedItem.State == ItemState.Normal)
                             tempSelectedItem.State = ItemState.Buyed;
@@ -462,7 +470,7 @@ namespace XamarinShoppingList1.ViewModels
     }
 
 
-    public static class Comarer
+    public static class Comparer
     {
         static object item1=null;
         static object item2=null;

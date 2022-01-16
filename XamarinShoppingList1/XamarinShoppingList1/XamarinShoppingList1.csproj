@@ -1,20 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <AssemblyName>XamarinShoppingList1</AssemblyName>
+    <RootNamespace>XamarinShoppingList1</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="Sharpnado.Presentation.Forms" Version="1.6.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
-    <PackageReference Include="Unity" Version="5.11.5" />
-    <PackageReference Include="Xamarin.Forms" Version="4.6.0.800" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.2" />  
-    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.6.0.800" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Sharpnado.Presentation.Forms" Version="1.7.1" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="Unity" Version="5.11.10" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />  
+    <PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1821" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,16 +46,14 @@
     <EmbeddedResource Update="Views\LoginPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\LoginWebPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\PermissionsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\RegistrationPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Helpers\DragAndDrop\Extensions\" />
-    <Folder Include="Helpers\DragAndDrop\Interfaces\" />
   </ItemGroup>
 </Project>

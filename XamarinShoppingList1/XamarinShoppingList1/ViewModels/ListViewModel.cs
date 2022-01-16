@@ -63,7 +63,15 @@ namespace XamarinShoppingList1.ViewModels
 
                                 List.Remove(List.Single(a => a.ListId == iDItemToDelete));
                             }
-                            catch { }
+                            catch (WebPermissionException ex)
+                            {
+                                Message.MessageDontHavePermission(Application.Current);
+
+                            }
+                            catch
+                            { 
+                            
+                            }
                         }
                     };
                     MessagingCenter.Send<Application, DisplayAlertMessage>(Application.Current, "ShowAlert", message);

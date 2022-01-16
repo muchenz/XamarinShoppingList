@@ -30,6 +30,7 @@
     </ContentPage.Resources>
     
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Logout"  Command="{Binding Logout}" />
         <ToolbarItem Text="Delete"  Command="{Binding IsVisibleDeleteLabelCommand}" />
 
         <ToolbarItem Text="Add/Edit"  Command="{Binding AddToolbarCommand}" />

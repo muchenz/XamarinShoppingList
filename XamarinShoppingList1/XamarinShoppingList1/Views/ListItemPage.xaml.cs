@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using XamarinShoppingList1.Helpers.DragAndDrop.Interfaces;
 using XamarinShoppingList1.ViewModels;
 
 namespace XamarinShoppingList1.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ListItemPage : ContentPage, IDragAndDropContainer
+    public partial class ListItemPage : ContentPage
     {        
 
         public ListItemPage(ListItemViewModel viewModel)

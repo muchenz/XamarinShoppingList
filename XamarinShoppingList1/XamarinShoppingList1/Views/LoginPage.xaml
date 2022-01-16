@@ -26,6 +26,7 @@
                 <Entry FontSize="Title" IsPassword="True" Placeholder="password" Text="{Binding Model.Password}"></Entry>
               
                 <Button FontSize="Title" Text="Login" Command="{Binding LoginCommand}" Margin="0,20,0,0"></Button>
+                <Button FontSize="Small" BackgroundColor="RoyalBlue" Text="Facebook" Command="{Binding LoginFacebookCommand}" Margin="0,30,0,0"></Button>
               
             </StackLayout>
             

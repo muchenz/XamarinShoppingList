@@ -41,4 +41,5 @@ namespace XamarinShoppingList1.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+       
 }

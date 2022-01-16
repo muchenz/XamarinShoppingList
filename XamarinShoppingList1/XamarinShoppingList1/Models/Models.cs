@@ -8,8 +8,13 @@ using System.Text;
 
 namespace XamarinShoppingList1.Models
 {
+    public class TokenAndEmailData
+    {
+        public string Token { get; set; }
+        public string Email { get; set; }
+    }
 
-     public class PermissionsToListAggr
+    public class PermissionsToListAggr
     {
 
         public int Id { get; set; }
@@ -38,7 +43,20 @@ namespace XamarinShoppingList1.Models
         public string Message { get; set; }
 
     }
+    public class MessageAndStatusAndData<T> : MessageAndStatus where T : class
+    {
+        public MessageAndStatusAndData(T data, bool error = false, string msg = "")
+        {
+            Data = data;
+            Message = msg;
+            IsError = error;
+        }
 
+
+        public T Data { get; set; }
+        public bool IsError { get; set; }
+
+    }
     public static class ItemState
     {
         public static int Normal => 0;

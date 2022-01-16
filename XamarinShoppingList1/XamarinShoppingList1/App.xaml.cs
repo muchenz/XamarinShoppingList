@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using Unity;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XamarinShoppingList1.Helpers.Configuration;
 using XamarinShoppingList1.Models;
 using XamarinShoppingList1.Services;
 using XamarinShoppingList1.ViewModels;
@@ -15,6 +17,8 @@ namespace XamarinShoppingList1
     {
         public static UnityContainer Container { get; set; }
         public static string Token { get; set; }
+        //public static string SinalRId { get; set; }
+        public static string FacebookToken { get; set; }
         public static string UserName { get; set; }
        //public static string Password { get; set; }
         public static User User { get; set; }
@@ -28,11 +32,18 @@ namespace XamarinShoppingList1
             InitContainer();
             InitMessage();
 
-            MainPage = new NavigationPage( App.Container.Resolve<LoginPage>());
+            MainPage = new NavigationPage(App.Container.Resolve<LoginPage>()) { 
+                BarBackgroundColor = Color.WhiteSmoke, 
+                BarTextColor=Color.Black //color of arrow in ToolbarItem
+            };
+
+            App.MMainPage = (NavigationPage)MainPage;
         }
 
+        public static NavigationPage MMainPage { get; set; }
 
-        private  void InitContainer()
+
+        private void InitContainer()
         {
             App.Container = new UnityContainer();
 
@@ -40,6 +51,7 @@ namespace XamarinShoppingList1
 
             App.Container.RegisterType<LoginPage>();
             App.Container.RegisterType<LoginViewModel>(); 
+            App.Container.RegisterType<LoginWebViewModel>();
             App.Container.RegisterType<ListAggregationPage>(); 
             App.Container.RegisterType<ListAggregationViewModel>();
             App.Container.RegisterType<ListPage>();
@@ -52,8 +64,9 @@ namespace XamarinShoppingList1
             App.Container.RegisterType<HttpClient>();
             App.Container.RegisterType<UserService>(); 
             App.Container.RegisterType<ListItemService>(); 
+            App.Container.RegisterSingleton<IConfiguration,Configuration>();
 
-            
+
         }
 
         private  void InitMessage()

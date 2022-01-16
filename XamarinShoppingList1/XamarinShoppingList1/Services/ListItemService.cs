@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,9 @@ namespace XamarinShoppingList1.Services
     {
 
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
 
-
-        public ListItemService(HttpClient httpClient)
+        public ListItemService(HttpClient httpClient, IConfiguration configuration)
         {
             //_httpClient = httpClient;
 
@@ -29,12 +30,14 @@ namespace XamarinShoppingList1.Services
 
             _httpClient = new HttpClient(handler);
 
-
-            //_httpClient.BaseAddress = new Uri("https://192.168.8.222:5003/api/");
-            _httpClient.BaseAddress = new Uri("https://94.251.148.92:5003/api/");
+            var baseAddress = configuration.GetSection("AppSettings")["ShoppingWebAPIBaseAddress"];
+            _httpClient.BaseAddress = new Uri(baseAddress);
+            
+            // _httpClient.BaseAddress = new Uri("https://192.168.8.222:5003/api/");
+            // _httpClient.BaseAddress = new Uri("https://94.251.148.92:5003/api/");
 
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "BlazorServer");
-
+            _configuration = configuration;
         }
 
 
@@ -248,6 +251,8 @@ namespace XamarinShoppingList1.Services
             var response = await _httpClient.SendAsync(requestMessage);
 
             var responseStatusCode = response.StatusCode;
+            if (responseStatusCode == HttpStatusCode.Forbidden)
+                throw new WebPermissionException(HttpStatusCode.Forbidden.ToString());
 
             var responseBody = await response.Content.ReadAsStringAsync();
 
