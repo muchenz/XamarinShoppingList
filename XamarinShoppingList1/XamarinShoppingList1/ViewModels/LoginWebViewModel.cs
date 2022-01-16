@@ -18,7 +18,7 @@ namespace XamarinShoppingList1.ViewModels
         {
             WebUrl = "https://www.facebook.com/v10.0/dialog/oauth?client_id=259675572518658"
                     + "&response_type=token"
-                    + "&redirect_uri=https://94.251.148.92:5003/api/User/FacebookToken"
+                    + "&redirect_uri=https://94.251.148.187:5003/api/User/FacebookToken"
                     + "&state=st=state123abc,ds=123456789&scope=public_profile,email";
 
             _userService = userService;
