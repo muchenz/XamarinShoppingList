@@ -15,12 +15,15 @@ namespace XamarinShoppingList1.Helpers
 {
     public class HubConnectionHelper
     {
-        public static async Task<HubConnection> EstablishSignalRConnectionAsync(ListAggregationViewModel vm, 
-            IConfiguration configuration,Func<Task<User>> RequestForNewData, ListItemService listItemService)
+        public static async Task<HubConnection> EstablishSignalRConnectionAsync(string token, ListAggregationViewModel vm, 
+            IConfiguration configuration,Func<Task<User>> RequestForNewData, ListItemService listItemService,
+            Action<string> SetInvitationString)
         {
             var signalRAddress = configuration.GetSection("AppSettings")["SignlRAddress"];
             HubConnection hubConnection = new HubConnectionBuilder().WithUrl(signalRAddress, (opts) =>
             {
+                opts.Headers.Add("Access_Token", token);
+
                 opts.HttpMessageHandlerFactory = (message) =>
                 {
                     if (message is HttpClientHandler clientHandler)
@@ -95,6 +98,12 @@ namespace XamarinShoppingList1.Helpers
 
                     }
                 }
+            });
+
+            hubConnection.On("NewInvitation_" + App.User.UserId, async () =>
+            {
+
+                SetInvitationString("NEW");
             });
 
             await hubConnection.StartAsync();

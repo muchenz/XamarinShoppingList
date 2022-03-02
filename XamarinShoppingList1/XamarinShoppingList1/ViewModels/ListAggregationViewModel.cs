@@ -29,10 +29,17 @@ namespace XamarinShoppingList1.ViewModels
         ListAggregator _selectedItem;
         public ListAggregator SelectedItem { get { return _selectedItem; } set { SetProperty(ref _selectedItem, value); } }
 
+        string _invitationsString = "";
+        public string InvitationsString
+        {
+            get { return _invitationsString == "" ? "Invitations" : $"Invitations\n({_invitationsString})"; }
+            set { SetProperty(ref _invitationsString, value); }
+        }
+
         ListAggregator _addListAggregatorModel = new ListAggregator();
         public ListAggregator AddListAggregatorModel { get { return _addListAggregatorModel; } set { SetProperty(ref _addListAggregatorModel, value); } }
 
-        public ListAggregationViewModel(UserService userService, ListItemService listItemService, IConfiguration  configuration)
+        public ListAggregationViewModel(UserService userService, ListItemService listItemService, IConfiguration configuration)
         {
             _userName = App.UserName;
             _userService = userService;
@@ -55,11 +62,11 @@ namespace XamarinShoppingList1.ViewModels
 
             });
 
-            MessagingCenter.Subscribe<ListItemViewModel>(this, "Save And Refresh New Order",  (a) =>
-            {
-                LoadSaveOrderDataHelper.SaveAllOrder(App.User.ListAggregators);
-                LoadSaveOrderDataHelper.LoadListAggregatorsOrder();
-            });
+            MessagingCenter.Subscribe<ListItemViewModel>(this, "Save And Refresh New Order", (a) =>
+           {
+               LoadSaveOrderDataHelper.SaveAllOrder(App.User.ListAggregators);
+               LoadSaveOrderDataHelper.LoadListAggregatorsOrder();
+           });
 
 
             base.InitAsyncCommand.Execute(null);
@@ -67,12 +74,13 @@ namespace XamarinShoppingList1.ViewModels
 
         int iDItemToDelete;
         string nameItemToDelete;
-       
+
         public ICommand DeleteCommand
         {
             get
             {
-                return new Command(() => {
+                return new Command(() =>
+                {
                     var message = new DisplayAlertMessage();
 
 
@@ -100,7 +108,7 @@ namespace XamarinShoppingList1.ViewModels
 
                             }
                         }
-                    };                    
+                    };
                     MessagingCenter.Send<Application, DisplayAlertMessage>(Application.Current, "ShowAlert", message);
 
                 });
@@ -114,7 +122,8 @@ namespace XamarinShoppingList1.ViewModels
         {
             get
             {
-                return new Command(() => {
+                return new Command(() =>
+                {
 
                     if (IsVisibleAddItem) IsVisibleAddItem = false;
 
@@ -134,13 +143,16 @@ namespace XamarinShoppingList1.ViewModels
             }
         }
         public ICommand AddListAggregatorCommand
-        { get {
+        {
+            get
+            {
 
-                return new Command(async () =>{
+                return new Command(async () =>
+                {
 
                     if (_isEdit)
                     {
-                        var  tempSelectedItem = SelectedItem;
+                        var tempSelectedItem = SelectedItem;
                         var tempName = SelectedItem.Name;
 
                         SelectedItem.Name = AddListAggregatorModel.Name;
@@ -181,21 +193,23 @@ namespace XamarinShoppingList1.ViewModels
                         if (listAggr != null)
                             ListAggr.Add(listAggr);
                     }
-                   
+
                     SelectedItem = null;
                     IsVisibleAddItem = false;
                     _isEdit = false;
                     AddListAggregatorModel = new ListAggregator();
-            });
-            
-            } }
+                });
+
+            }
+        }
 
         public ICommand LoadItemsCommand
         {
             get
             {
 
-                return new Command(async () => {
+                return new Command(async () =>
+                {
 
                     _ = await RequestForNewData();
 
@@ -210,7 +224,8 @@ namespace XamarinShoppingList1.ViewModels
             get
             {
 
-                return new Command(() => {
+                return new Command(() =>
+                {
 
 
                     var message = new DisplayAlertMessage();
@@ -235,7 +250,7 @@ namespace XamarinShoppingList1.ViewModels
                                 await Navigation.PopAsync();
 
                             }
-                           
+
                             catch
                             {
 
@@ -245,7 +260,7 @@ namespace XamarinShoppingList1.ViewModels
                     MessagingCenter.Send<Application, DisplayAlertMessage>(Application.Current, "ShowAlert", message);
 
 
-                  
+
 
                     IsBusy = false;
 
@@ -253,21 +268,26 @@ namespace XamarinShoppingList1.ViewModels
 
             }
         }
-        public ICommand ItemClickedCommand { get {
-                return new Command(async (listAggr) => {
-                                  
-                    
-                    await Navigation.PushAsync(App.Container.Resolve<ListPage>(
-                        new ResolverOverride[] { new ParameterOverride("listAggregator", listAggr) }));
-                });
-            
-            }
-        }
-         public ICommand InvitationsCommand
+        public ICommand ItemClickedCommand
         {
             get
             {
-                return new Command(async (listAggr) => {
+                return new Command(async (listAggr) =>
+                {
+
+
+                    await Navigation.PushAsync(App.Container.Resolve<ListPage>(
+                        new ResolverOverride[] { new ParameterOverride("listAggregator", listAggr) }));
+                });
+
+            }
+        }
+        public ICommand InvitationsCommand
+        {
+            get
+            {
+                return new Command(async (listAggr) =>
+                {
 
 
                     await Navigation.PushAsync(App.Container.Resolve<InvitationsPage>(
@@ -283,7 +303,8 @@ namespace XamarinShoppingList1.ViewModels
         {
             get
             {
-                return new Command( () => {
+                return new Command(() =>
+                {
 
                     if (IsVisibleDeleteLabel) IsVisibleDeleteLabel = false;
 
@@ -304,7 +325,8 @@ namespace XamarinShoppingList1.ViewModels
         {
             get
             {
-                return new Command(async () => {
+                return new Command(async () =>
+                {
 
                     if (SelectedItem == null) return;
 
@@ -337,12 +359,16 @@ namespace XamarinShoppingList1.ViewModels
 
         ObservableCollection<ListAggregator> _listAggr;
 
-        public ObservableCollection<ListAggregator> ListAggr { get { return _listAggr; }
-            set {
+        public ObservableCollection<ListAggregator> ListAggr
+        {
+            get { return _listAggr; }
+            set
+            {
                 _listAggr = value;
                 OnPropertyChanged();
-            
-            } }
+
+            }
+        }
 
         Task reperterTask;
 
@@ -375,19 +401,19 @@ namespace XamarinShoppingList1.ViewModels
 
             if (!string.IsNullOrEmpty(_userName))
             {
-                 _=  await RequestForNewData();
+                _ = await RequestForNewData();
 
                 // reperterTask = Task.Run(() => reperterTaskFunctionAsync());
             }
 
             try
             {
-                _hubConnection = await HubConnectionHelper.EstablishSignalRConnectionAsync(this, _configuration,
-                    RequestForNewData, _listItemService);
+                _hubConnection = await HubConnectionHelper.EstablishSignalRConnectionAsync(App.Token, this, _configuration,
+                    RequestForNewData, _listItemService, (a) => InvitationsString = a);
 
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
 
@@ -410,11 +436,11 @@ namespace XamarinShoppingList1.ViewModels
                     MessagingCenter.Send<ListAggregationViewModel, User>(this, "New Data", data);
                 }
                 catch { }
-                
+
             }
         }
 
-       
+
 
     }
 }

@@ -35,7 +35,7 @@
 
         <ToolbarItem Text="Add/Edit"  Command="{Binding AddToolbarCommand}" />
 
-        <ToolbarItem Text="Invitations"  Command="{Binding InvitationsCommand}" />
+        <ToolbarItem  Text="{Binding InvitationsString}"  Command="{Binding InvitationsCommand}" />
     </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
