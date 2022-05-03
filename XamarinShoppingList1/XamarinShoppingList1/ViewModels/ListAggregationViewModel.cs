@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
@@ -18,7 +19,7 @@ using XamarinShoppingList1.Views;
 
 namespace XamarinShoppingList1.ViewModels
 {
-    public class ListAggregationViewModel : BaseViewModel
+    public class ListAggregationViewModel : BaseViewModel, IDisposable
     {
         HubConnection _hubConnection;
 
@@ -248,7 +249,6 @@ namespace XamarinShoppingList1.ViewModels
                                 Application.Current.Properties["Password"] = "";
 
                                 await Navigation.PopAsync();
-
                             }
 
                             catch
@@ -288,7 +288,7 @@ namespace XamarinShoppingList1.ViewModels
             {
                 return new Command(async (listAggr) =>
                 {
-
+                    InvitationsString = "";
 
                     await Navigation.PushAsync(App.Container.Resolve<InvitationsPage>(
                         new ResolverOverride[] { new ParameterOverride("listAggregator", listAggr) }));
@@ -394,6 +394,7 @@ namespace XamarinShoppingList1.ViewModels
             return data;
         }
 
+        List<IDisposable> _listDisposable = null;
         protected override async Task InitAsync()
         {
 
@@ -408,9 +409,14 @@ namespace XamarinShoppingList1.ViewModels
 
             try
             {
-                _hubConnection = await HubConnectionHelper.EstablishSignalRConnectionAsync(App.Token, this, _configuration,
+                (_listDisposable, _hubConnection) = await HubConnectionHelper.EstablishSignalRConnectionAsync(App.Token, this, _configuration,
                     RequestForNewData, _listItemService, (a) => InvitationsString = a);
 
+                var invList = await _userService.GetInvitationsListAsync(App.UserName);
+
+                if (invList.Count > 0)
+                    InvitationsString = "NEW";
+                
             }
 
             catch (Exception ex)
@@ -441,6 +447,11 @@ namespace XamarinShoppingList1.ViewModels
         }
 
 
-
+        public async void Dispose()
+        {
+           // await _hubConnection.StopAsync();
+            _listDisposable.ForEach(x => x?.Dispose());
+            await _hubConnection.DisposeAsync();
+        }
     }
 }

@@ -82,8 +82,26 @@ namespace XamarinShoppingList1.ViewModels
                     await Navigation.PushAsync(App.Container.Resolve<ListAggregationPage>()); 
                 }else
                 {
-                   // if (string.IsNullOrEmpty(LoginError))
-                        LoginError = response.Message=="User"?"Bad Login or Password.":response.Message;
+
+
+
+                    if (!string.IsNullOrEmpty(response.Message) && response.Message != "User")
+                    {
+                        LoginError = response.Message;
+                    }
+                    else
+                    {
+
+                        LoginError = response.Message switch
+                        {
+                            "User" => "Bad Login or Password.",
+                            "" => "Service internal error.",
+                            _ => "Some error"
+                        };
+                    }
+
+                    
+                    
                 }
                 
             }

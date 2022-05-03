@@ -15,8 +15,8 @@ namespace XamarinShoppingList1.Helpers
 {
     public class HubConnectionHelper
     {
-        public static async Task<HubConnection> EstablishSignalRConnectionAsync(string token, ListAggregationViewModel vm, 
-            IConfiguration configuration,Func<Task<User>> RequestForNewData, ListItemService listItemService,
+        public static async Task<(List<IDisposable>, HubConnection)> EstablishSignalRConnectionAsync(string token, ListAggregationViewModel vm,
+            IConfiguration configuration, Func<Task<User>> RequestForNewData, ListItemService listItemService,
             Action<string> SetInvitationString)
         {
             var signalRAddress = configuration.GetSection("AppSettings")["SignlRAddress"];
@@ -35,17 +35,19 @@ namespace XamarinShoppingList1.Helpers
             }).WithAutomaticReconnect().Build();
 
 
-            hubConnection.On("DataAreChanged_" + App.User.UserId, async () =>
+            var dataAreChangeDispose = hubConnection.On("DataAreChanged_" + App.User.UserId,
+                async () =>
             {
-                    var data = await RequestForNewData();
+                var data = await RequestForNewData();
 
-                    MessagingCenter.Send<ListAggregationViewModel, User>(vm, "New Data", data);
+                MessagingCenter.Send<ListAggregationViewModel, User>(vm, "New Data", data);
 
-                    return;
+                return;
             });
 
-             hubConnection.On("ListItemAreChanged_" + App.User.UserId, async (string command, int? id1, int? listAggregationId, int? parentId) =>
-             {
+            var listItemArechangeDispose = hubConnection.On("ListItemAreChanged_" + App.User.UserId,
+                async (string command, int? id1, int? listAggregationId, int? parentId) =>
+            {
                 if (command.EndsWith("ListItem"))
                 {
                     var item = await listItemService.GetItem<ListItem>((int)id1, (int)listAggregationId);
@@ -65,10 +67,10 @@ namespace XamarinShoppingList1.Helpers
 
                     }
                     else
-                     if (command == "Add_ListItem")
+                      if (command == "Add_ListItem")
                     {
                         var tempList = App.User.ListAggregators.Where(a => a.ListAggregatorId == listAggregationId).FirstOrDefault().
-                        Lists.Where(a => a.ListId == parentId).FirstOrDefault().ListItems;
+                         Lists.Where(a => a.ListId == parentId).FirstOrDefault().ListItems;
 
                         if (!tempList.Where(a => a.Id == item.Id).Any())
                         {
@@ -77,7 +79,7 @@ namespace XamarinShoppingList1.Helpers
                         MessagingCenter.Send<ListAggregationViewModel, User>(vm, "New Data", App.User);
                     }
                     else
-                     if (command == "Delete_ListItem")
+                      if (command == "Delete_ListItem")
                     {
 
                         var lists = App.User.ListAggregators.Where(a => a.ListAggregatorId == listAggregationId).FirstOrDefault();
@@ -88,7 +90,7 @@ namespace XamarinShoppingList1.Helpers
                         foreach (var listItem in lists.Lists)
                         {
                             founfList = listItem;
-                            foundListItem = listItem.ListItems.Single(a => a.Id == id1);
+                            foundListItem = listItem.ListItems.FirstOrDefault(a => a.Id == id1);
                             if (foundListItem != null) break;
                         }
 
@@ -100,15 +102,21 @@ namespace XamarinShoppingList1.Helpers
                 }
             });
 
-            hubConnection.On("NewInvitation_" + App.User.UserId, async () =>
+            var newInvitationDispose = hubConnection.On("NewInvitation_" + App.User.UserId, async () =>
             {
 
                 SetInvitationString("NEW");
             });
 
+
+
+            List<IDisposable> disposables = new List<IDisposable>(new[]
+            { newInvitationDispose, listItemArechangeDispose, dataAreChangeDispose });
+
+
             await hubConnection.StartAsync();
 
-            return hubConnection;
+            return (disposables, hubConnection);
 
         }
     }

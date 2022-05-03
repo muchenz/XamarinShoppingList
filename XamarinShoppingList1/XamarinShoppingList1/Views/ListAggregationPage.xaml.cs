@@ -21,6 +21,36 @@ namespace XamarinShoppingList1.Views
             
             BindingContext = listAggregationViewModel;
             listAggregationViewModel.Navigation = Navigation;
-        }      
+        }
+
+        //protected override bool OnBackButtonPressed()
+        //{
+        //    ((ListAggregationViewModel)BindingContext).Dispose();
+
+        //    return base.OnBackButtonPressed();
+        //}
+
+
+        protected override void OnParentSet()
+        {
+            base.OnParentSet();
+            if (Parent == null)
+                DisposeBindingContext();
+        }
+
+        protected void DisposeBindingContext()
+        {
+            if (BindingContext is IDisposable disposableBindingContext)
+            {
+                disposableBindingContext.Dispose();
+                BindingContext = null;
+            }
+        }
+        ~ListAggregationPage()
+        {
+            DisposeBindingContext();
+        }
+
+
     }
 }
