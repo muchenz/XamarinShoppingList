@@ -459,8 +459,11 @@ namespace XamarinShoppingList1.ViewModels
             //}).GetAwaiter().GetResult();
 
             
+            //if (_hubConnection != null)
+            //    _hubConnection.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+
             if (_hubConnection != null)
-                _hubConnection.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult(); 
+                _ = _hubConnection.DisposeAsync();// from codeoverflow
 
         }
     }
