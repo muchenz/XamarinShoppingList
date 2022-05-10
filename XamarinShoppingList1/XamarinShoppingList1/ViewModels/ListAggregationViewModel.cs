@@ -416,7 +416,7 @@ namespace XamarinShoppingList1.ViewModels
 
                 if (invList.Count > 0)
                     InvitationsString = "NEW";
-                
+
             }
 
             catch (Exception ex)
@@ -447,11 +447,21 @@ namespace XamarinShoppingList1.ViewModels
         }
 
 
-        public async void Dispose()
+        public void Dispose()
         {
-           // await _hubConnection.StopAsync();
-            _listDisposable.ForEach(x => x?.Dispose());
-            await _hubConnection.DisposeAsync();
+
+            _listDisposable?.ForEach(x => x?.Dispose());
+            //Task.Run(async () =>
+            //{
+            //    if (_hubConnection != null)
+            //        await _hubConnection.DisposeAsync();
+
+            //}).GetAwaiter().GetResult();
+
+            
+            if (_hubConnection != null)
+                _hubConnection.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult(); 
+
         }
     }
 }

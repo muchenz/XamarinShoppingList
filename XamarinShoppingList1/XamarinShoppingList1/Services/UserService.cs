@@ -105,9 +105,15 @@ namespace XamarinShoppingList1.Services
             MessageAndStatus message = null;
             try
             {
-                                
+                var source = new CancellationTokenSource();
 
-                var response = await _httpClient.SendAsync(requestMessage);
+                _ = Task.Run(async () => {
+                    await Task.Delay(10000);
+                    source.Cancel();
+                });
+
+
+                var response = await _httpClient.SendAsync(requestMessage, source.Token);
 
                 var data = await response.Content.ReadAsStringAsync();
 
