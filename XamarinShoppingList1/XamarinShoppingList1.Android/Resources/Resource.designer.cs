@@ -14,7 +14,7 @@ namespace XamarinShoppingList1.Droid
 {
 	
 	
-	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.2.4.160")]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "12.3.0.26")]
 	public partial class Resource
 	{
 		
@@ -153,6 +153,7 @@ namespace XamarinShoppingList1.Droid
 			global::Xamarin.Essentials.Resource.Id.text2 = global::XamarinShoppingList1.Droid.Resource.Id.text2;
 			global::Xamarin.Essentials.Resource.Id.time = global::XamarinShoppingList1.Droid.Resource.Id.time;
 			global::Xamarin.Essentials.Resource.Id.title = global::XamarinShoppingList1.Droid.Resource.Id.title;
+			global::Xamarin.Essentials.Resource.Id.view_tree_lifecycle_owner = global::XamarinShoppingList1.Droid.Resource.Id.view_tree_lifecycle_owner;
 			global::Xamarin.Essentials.Resource.Integer.status_bar_notification_info_maxnum = global::XamarinShoppingList1.Droid.Resource.Integer.status_bar_notification_info_maxnum;
 			global::Xamarin.Essentials.Resource.Layout.browser_actions_context_menu_page = global::XamarinShoppingList1.Droid.Resource.Layout.browser_actions_context_menu_page;
 			global::Xamarin.Essentials.Resource.Layout.browser_actions_context_menu_row = global::XamarinShoppingList1.Droid.Resource.Layout.browser_actions_context_menu_row;
@@ -13166,16 +13167,19 @@ namespace XamarinShoppingList1.Droid
 			public const int view_offset_helper = 2131231019;
 			
 			// aapt resource value: 0x7F08012C
-			public const int visible = 2131231020;
+			public const int view_tree_lifecycle_owner = 2131231020;
 			
 			// aapt resource value: 0x7F08012D
-			public const int volume_item_container = 2131231021;
+			public const int visible = 2131231021;
 			
 			// aapt resource value: 0x7F08012E
-			public const int withText = 2131231022;
+			public const int volume_item_container = 2131231022;
 			
 			// aapt resource value: 0x7F08012F
-			public const int wrap_content = 2131231023;
+			public const int withText = 2131231023;
+			
+			// aapt resource value: 0x7F080130
+			public const int wrap_content = 2131231024;
 			
 			static Id()
 			{

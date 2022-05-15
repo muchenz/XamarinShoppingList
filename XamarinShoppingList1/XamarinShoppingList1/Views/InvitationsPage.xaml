@@ -29,7 +29,7 @@
 
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Manage"  Command="{Binding ManageCommand}" />
+        <ToolbarItem Text="Permissions and Invitaton"  Command="{Binding ManageCommand}" />
 
      
     </ContentPage.ToolbarItems>

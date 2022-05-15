@@ -33,9 +33,12 @@ namespace XamarinShoppingList1.ViewModels
         string _invitationsString = "";
         public string InvitationsString
         {
-            get { return _invitationsString == "" ? "Invitations" : $"Invitations\n({_invitationsString})"; }
+            get { return _invitationsString == "" ? "Manage" : $"Manage\n({_invitationsString})"; }
             set { SetProperty(ref _invitationsString, value); }
         }
+
+        public int WidthRequest { get; set; }
+        public string AddEdit => "Add|Edit";
 
         ListAggregator _addListAggregatorModel = new ListAggregator();
         public ListAggregator AddListAggregatorModel { get { return _addListAggregatorModel; } set { SetProperty(ref _addListAggregatorModel, value); } }
@@ -451,16 +454,16 @@ namespace XamarinShoppingList1.ViewModels
         {
 
             _listDisposable?.ForEach(x => x?.Dispose());
-            //Task.Run(async () =>
+            //Task.Run(async () =>                         //hang
             //{
             //    if (_hubConnection != null)
             //        await _hubConnection.DisposeAsync();
 
             //}).GetAwaiter().GetResult();
 
-            
+
             //if (_hubConnection != null)
-            //    _hubConnection.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            //    _hubConnection.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult();  //hang
 
             if (_hubConnection != null)
                 _ = _hubConnection.DisposeAsync();// from codeoverflow

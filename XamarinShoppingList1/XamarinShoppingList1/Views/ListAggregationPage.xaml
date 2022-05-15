@@ -5,7 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:XamarinShoppingList1.Behaviors"
              mc:Ignorable="d"
              x:Class="XamarinShoppingList1.Views.ListAggregationPage"
-             xmlns:converterLocal="clr-namespace:XamarinShoppingList1.Converters" 
+             xmlns:converterLocal="clr-namespace:XamarinShoppingList1.Converters"
+             WidthRequest="{Binding WidthRequest, Mode=TwoWay}"
              x:Name="ListAggregationPageName" >
 
     <ContentPage.Resources>
@@ -33,7 +34,8 @@
         <ToolbarItem Text="Logout"  Command="{Binding Logout}" />
         <ToolbarItem Text="Delete"  Command="{Binding IsVisibleDeleteLabelCommand}" />
 
-        <ToolbarItem Text="Add/Edit"  Command="{Binding AddToolbarCommand}" />
+        <!--<ToolbarItem Text="Add/Edit"  Command="{Binding AddToolbarCommand}" />-->
+        <ToolbarItem Text="{Binding AddEdit}"  Command="{Binding AddToolbarCommand}" />
 
         <ToolbarItem  Text="{Binding InvitationsString}"  Command="{Binding InvitationsCommand}" />
     </ContentPage.ToolbarItems>
