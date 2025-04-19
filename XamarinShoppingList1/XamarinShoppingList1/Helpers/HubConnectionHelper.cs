@@ -59,7 +59,7 @@ namespace XamarinShoppingList1.Helpers
                         ListItem foundListItem = null;
                         foreach (var listItem in lists.Lists)
                         {
-                            foundListItem = listItem.ListItems.Single(a => a.Id == id1);
+                            foundListItem = listItem.ListItems.FirstOrDefault(a => a.Id == id1);
                             if (foundListItem != null) break;
                         }
                         foundListItem.ListItemName = item.ListItemName;

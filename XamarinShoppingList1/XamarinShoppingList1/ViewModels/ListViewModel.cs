@@ -39,6 +39,9 @@ namespace XamarinShoppingList1.ViewModels
 
         }
 
+        ICollection<List> _listFromAppuserUser;
+              
+
         int iDItemToDelete;
         string nameItemToDelete;
         public ICommand DeleteCommand
@@ -62,6 +65,9 @@ namespace XamarinShoppingList1.ViewModels
                                 await _listItemService.Delete<List>(iDItemToDelete, _listAggregator.ListAggregatorId);
 
                                 List.Remove(List.Single(a => a.ListId == iDItemToDelete));
+                                
+                                //_listAggregator.Lists = List;
+                            
                             }
                             catch (WebPermissionException ex)
                             {
@@ -75,6 +81,8 @@ namespace XamarinShoppingList1.ViewModels
                         }
                     };
                     MessagingCenter.Send<Application, DisplayAlertMessage>(Application.Current, "ShowAlert", message);
+
+                    //_listAggregator.Lists = List;
 
                 });
 
@@ -162,6 +170,8 @@ namespace XamarinShoppingList1.ViewModels
                     isEdit = false;
                     SelectedItem = null;
                     IsVisibleAddItem = false;
+                    //_listAggregator.Lists = List;
+
                 });
 
             }
@@ -210,10 +220,13 @@ namespace XamarinShoppingList1.ViewModels
                 if (temPlist==null)
                 {
                     List = new ObservableCollection<List>();
+                    temPlist.Lists = List;
+
                 }
                 else
                 {
                     List = new ObservableCollection<List>(temPlist.Lists);
+                    temPlist.Lists = List;
                 }
             }
             catch

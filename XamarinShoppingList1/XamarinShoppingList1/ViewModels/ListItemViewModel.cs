@@ -282,7 +282,7 @@ namespace XamarinShoppingList1.ViewModels
             var tempListItem = App.User.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault()
              .Lists.Where(a => a.ListId == _list.ListId).FirstOrDefault();
 
-            tempListItem.ListItems = new List<ListItem>(collection) as ICollection<ListItem>;
+            tempListItem.ListItems = new List<ListItem>(collection) as IList<ListItem>;
             //tempListItem.ListItems = ListItems as ICollection<ListItem>;
                 
 
