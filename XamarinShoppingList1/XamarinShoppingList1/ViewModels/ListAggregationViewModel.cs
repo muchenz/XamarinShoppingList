@@ -186,6 +186,8 @@ namespace XamarinShoppingList1.ViewModels
                         ListAggregator listAggr = null;
                         try
                         {
+                            AddListAggregatorModel.Order = ListAggr.Any() ? ListAggr.Max(a => a.Order) + 1:1;
+
                             listAggr = await _listItemService.AddItem(App.User.UserId, AddListAggregatorModel, -1);
                         }
                         catch (WebPermissionException)
@@ -195,7 +197,8 @@ namespace XamarinShoppingList1.ViewModels
                         catch { }
 
                         if (listAggr != null)
-                            ListAggr.Add(listAggr);
+                            ListAggr.Insert(0,listAggr);
+                            //ListAggr.Add(listAggr);
                     }
 
                     SelectedItem = null;
@@ -387,12 +390,12 @@ namespace XamarinShoppingList1.ViewModels
                 data = await _userService.GetUserDataTreeObjectsgAsync(_userName);
 
                 App.User = data;
+                LoadSaveOrderDataHelper.LoadListAggregatorsOrder();
 
                 ListAggr = new ObservableCollection<ListAggregator>(data.ListAggregators);
             }
             catch { }
 
-            LoadSaveOrderDataHelper.LoadListAggregatorsOrder();
 
             return data;
         }

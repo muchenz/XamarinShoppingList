@@ -150,6 +150,8 @@ namespace XamarinShoppingList1.ViewModels
                         List list = null;
                         try
                         {
+                            AddListModel.Order = List.Any()?List.Max(a => a.Order) + 1:1;
+
                             list = await _listItemService.AddItem(_listAggregator.ListAggregatorId, AddListModel, _listAggregator.ListAggregatorId);
                         }
                         catch (WebPermissionException ex)
@@ -157,12 +159,12 @@ namespace XamarinShoppingList1.ViewModels
                             Message.MessageDontHavePermission(Application.Current);
 
                         }
-                        catch
+                        catch(Exception ex)
                         {
                         }
                         if (list != null)
                         {
-                            List.Add(list);                           
+                            List.Insert(0,list);                           
                         }
                     }
 
