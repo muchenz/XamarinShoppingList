@@ -74,7 +74,7 @@ namespace XamarinShoppingList1.Helpers
 
                         if (!tempList.Where(a => a.Id == item.Id).Any())
                         {
-                            tempList.Add(item);
+                            tempList.Insert(0,item);
                         }
                         MessagingCenter.Send<ListAggregationViewModel, User>(vm, "New Data", App.User);
                     }
