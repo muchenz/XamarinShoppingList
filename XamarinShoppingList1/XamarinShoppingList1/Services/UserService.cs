@@ -259,7 +259,7 @@ namespace XamarinShoppingList1.Services
             querry.Add("userName", userName);
             // querry.Add("password", password);
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "User/GetListAggregationForPermission" + querry.ToString());
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "Permissions/GetListAggregationForPermission" + querry.ToString());
 
 
             await SetRequestBearerAuthorizationHeader(requestMessage);
@@ -312,7 +312,7 @@ namespace XamarinShoppingList1.Services
 
             string serializedUser = JsonConvert.SerializeObject(userPermissionToList);
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "User/" + actionName + querry.ToString());
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "Permissions/" + actionName + querry.ToString());
 
 
             requestMessage.Content = new StringContent(serializedUser);

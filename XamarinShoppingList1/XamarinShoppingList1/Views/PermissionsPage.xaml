@@ -15,11 +15,7 @@
         <ToolbarItem Text="Invite user"  Command="{Binding InvitToolbarCommand}" />
     </ContentPage.ToolbarItems>
 
-    <ContentPage.Content>
-        <StackLayout>
-         
-        </StackLayout>
-    </ContentPage.Content>
+    
     <StackLayout>
 
         <Frame  IsVisible="{Binding IsVisibleInviteteItem}" BorderColor="Bisque"  BackgroundColor="Bisque" HasShadow="True" Padding="5" Margin="0,0,0,5">

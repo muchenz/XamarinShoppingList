@@ -22,12 +22,29 @@ namespace XamarinShoppingList1.Views
         }
 
         private async void WebView_Navigated(object sender, WebNavigatedEventArgs e)
-        { 
-            if (GetParameter(e.Url, "access_token") != null)
+        {
+            var token = string.Empty;
+
+            if (e.Url.Contains("#access_token="))
             {
-                await ((LoginWebViewModel)BindingContext).ObtainedAccessTokenAsync(GetParameter(e.Url, "access_token"));
-                //Navigation.RemovePage(this);
+                token = e.Url.Split("#access_token=")[1].Split("&")[0];
+
             }
+
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                await ((LoginWebViewModel)BindingContext).ObtainedAccessTokenAsync(token);
+
+            }
+
+            //if (GetParameter(e.Url, "access_token") != null)
+            //{
+
+
+            //    await ((LoginWebViewModel)BindingContext).ObtainedAccessTokenAsync(GetParameter(e.Url, "access_token"));
+            //    //Navigation.RemovePage(this);
+            //}
         }
 
         public static string GetParameter(string urlString, string param)
