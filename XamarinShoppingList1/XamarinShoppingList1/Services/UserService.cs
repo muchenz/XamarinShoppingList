@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using XamarinShoppingList1.Models;
+using XamarinShoppingList1.Models.Requests;
+using XamarinShoppingList1.Models.Response;
 
 namespace XamarinShoppingList1.Services
 {
@@ -82,28 +84,28 @@ namespace XamarinShoppingList1.Services
             return message;
         }
 
-        public async Task<MessageAndStatus> LoginAsync(string userName, string password)
+        public async Task<MessageAndStatusAndData<UserNameAndTokenResponse>> LoginAsync(string userName, string password)
         {
 
-            var querry = new QueryBuilder();
-            querry.Add("userName", userName);
-            querry.Add("password", password);
+            var loginRequest = new LoginRequest
+            {
+                UserName = userName,
+                Password = password
+            };
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "User/Login" + querry.ToString());
+            var json = JsonConvert.SerializeObject(loginRequest);
 
-            // await SetRequestBearerAuthorizationHeader(requestMessage);
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "User/Login")
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
 
-            requestMessage.Content = new StringContent("");
-
-            requestMessage.Content.Headers.ContentType
-                = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-
-            MessageAndStatus message = null;
             try
             {
                 var source = new CancellationTokenSource();
 
-                _ = Task.Run(async () => {
+                _ = Task.Run(async () =>
+                {
                     await Task.Delay(10000);
                     source.Cancel();
                 });
@@ -111,16 +113,24 @@ namespace XamarinShoppingList1.Services
 
                 var response = await _httpClient.SendAsync(requestMessage, source.Token);
 
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    return MessageAndStatusAndData<UserNameAndTokenResponse>.Fail("Invalid username or password.");
+                }
+                if (!response.IsSuccessStatusCode)
+                {
+                    return MessageAndStatusAndData<UserNameAndTokenResponse>.Fail("Some errors occured.");
+                }
+
                 var data = await response.Content.ReadAsStringAsync();
 
-                 message = JsonConvert.DeserializeObject<MessageAndStatus>(data);
+                var tokenAndUsername = JsonConvert.DeserializeObject<UserNameAndTokenResponse>(data);
+                return MessageAndStatusAndData<UserNameAndTokenResponse>.Ok(tokenAndUsername);
             }
             catch
             {
-                message = new MessageAndStatus { Status = "ERROR", Message = "Connection problem." };
+                return MessageAndStatusAndData<UserNameAndTokenResponse>.Fail("Connection problem.");
             }
-            return await Task.FromResult(message);
-
         }
 
         public async Task<string> GetUserDataTreeStringAsync(string userName)

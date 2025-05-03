@@ -9,6 +9,7 @@ using System.Windows.Input;
 using Unity;
 using Xamarin.Forms;
 using XamarinShoppingList1.Models;
+using XamarinShoppingList1.Models.Response;
 using XamarinShoppingList1.Services;
 using XamarinShoppingList1.Views;
 
@@ -61,54 +62,27 @@ namespace XamarinShoppingList1.ViewModels
         {
             if (!String.IsNullOrEmpty(Model.Password) && !String.IsNullOrEmpty(Model.UserName))
             {
-                MessageAndStatus response = null;
                 LoginError = null;
-                try
-                {
-                     response = await _userService.LoginAsync(Model.UserName, Model.Password);
-                     LoginError = null;
-                }
-                catch(Exception ex)
-                {
-                    //if (string.IsNullOrEmpty(App.Token))
-                        LoginError = "Connection problem.";
-                }
 
-                if (response.Status=="OK" && !string.IsNullOrEmpty(response.Message))
+                MessageAndStatusAndData<UserNameAndTokenResponse> response =
+                    await _userService.LoginAsync(Model.UserName, Model.Password);
+
+
+                if (!response.IsError)
                 {
                     App.UserName = Model.UserName;
                     App.Token = response.Message;
 
-                    await Navigation.PushAsync(App.Container.Resolve<ListAggregationPage>()); 
-                }else
-                {
-
-
-
-                    if (!string.IsNullOrEmpty(response.Message) && response.Message != "User")
-                    {
-                        LoginError = response.Message;
-                    }
-                    else
-                    {
-
-                        LoginError = response.Message switch
-                        {
-                            "User" => "Bad Login or Password.",
-                            "" => "Service internal error.",
-                            _ => "Some error"
-                        };
-                    }
-
-                    
-                    
+                    await Navigation.PushAsync(App.Container.Resolve<ListAggregationPage>());
                 }
-                
+                else
+                {
+                    LoginError = response.Message;
+                }
             }
 
-
-
         }
+
         
         public ICommand CreateAccountCommand
         {
