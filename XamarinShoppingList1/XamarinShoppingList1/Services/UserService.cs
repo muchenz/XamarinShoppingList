@@ -61,29 +61,25 @@ namespace XamarinShoppingList1.Services
 
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, "User/FacebookToken" + querry.ToString());
 
-            // await SetRequestBearerAuthorizationHeader(requestMessage);
-
-            requestMessage.Content = new StringContent("");
-
-            requestMessage.Content.Headers.ContentType
-                = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-
             MessageAndStatusAndData<TokenAndEmailData> message = null;
             try
             {
-
-
                 var response = await _httpClient.SendAsync(requestMessage);
-
                 var data = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
 
-                message = JsonConvert.DeserializeObject<MessageAndStatusAndData<TokenAndEmailData>>(data);
+                    var tokenData = JsonConvert.DeserializeObject<TokenAndEmailData>(data);
+                    return MessageAndStatusAndData<TokenAndEmailData>.Ok(tokenData);
+                }
+                message = MessageAndStatusAndData<TokenAndEmailData>.Fail(
+                    JsonConvert.DeserializeObject<ProblemDetails >(data).Title);
             }
             catch
             {
-                message = new MessageAndStatusAndData<TokenAndEmailData>(null, true, "Connection problem.");
+                message = MessageAndStatusAndData<TokenAndEmailData>.Fail( "Connection problem.");
             }
-            return await Task.FromResult(message);
+            return message;
         }
 
         public async Task<MessageAndStatus> LoginAsync(string userName, string password)
