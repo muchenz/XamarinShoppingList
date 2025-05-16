@@ -45,7 +45,8 @@ namespace XamarinShoppingList1.ViewModels
         }
         public async Task Registration()
         {
-            string token = "";
+            MessageAndStatusAndData<string> response = null;
+
             RegistrationError = "";
             if (!ModelError.IsValid)
             {
@@ -54,11 +55,11 @@ namespace XamarinShoppingList1.ViewModels
             }
             try
             {
-                token = await _userService.RegisterAsync(Model);
+                response = await _userService.RegisterAsync(Model);
 
-                if (string.IsNullOrEmpty(token))
+                if (response.IsError)
                 {
-                    RegistrationError = "Error, change login name and try again.";
+                    RegistrationError = response.Message;
 
                     return;
                 }
@@ -66,7 +67,7 @@ namespace XamarinShoppingList1.ViewModels
                 {
                     App.UserName = Model.UserName;
 
-                    App.Token = token;
+                    App.Token = response.Data;
 
 
                     Application.Current.Properties["UserName"] = Model.UserName;
