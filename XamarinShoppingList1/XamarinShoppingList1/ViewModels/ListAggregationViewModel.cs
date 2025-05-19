@@ -382,12 +382,9 @@ namespace XamarinShoppingList1.ViewModels
         async Task<User> RequestForNewData()
         {
             User data = null;
-
-            if (string.IsNullOrEmpty(_userName)) return data;
-
             try
             {
-                data = await _userService.GetUserDataTreeObjectsgAsync(_userName);
+                data = await _userService.GetUserDataTreeAsync();
 
                 App.User = data;
                 LoadSaveOrderDataHelper.LoadListAggregatorsOrder();

@@ -133,14 +133,10 @@ namespace XamarinShoppingList1.Services
             }
         }
 
-        public async Task<string> GetUserDataTreeStringAsync(string userName)
+        public async Task<User> GetUserDataTreeAsync()
         {
 
-            var querry = new QueryBuilder();
-            querry.Add("userName", userName);
-            // querry.Add("password", password);
-
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "User/GetUserDataTree" + querry.ToString());
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "User/UserDataTree");
 
 
             await SetRequestBearerAuthorizationHeader(requestMessage);
@@ -150,21 +146,10 @@ namespace XamarinShoppingList1.Services
 
             var data = await response.Content.ReadAsStringAsync();
 
-            var message = JsonConvert.DeserializeObject<MessageAndStatus>(data);
+            var user = JsonConvert.DeserializeObject<User>(data);
 
 
-            return await Task.FromResult(message.Message);
-        }
-
-        public async Task<User> GetUserDataTreeObjectsgAsync(string userName)
-        {
-
-            var dataString = await GetUserDataTreeStringAsync(userName);
-
-
-            var dataObjects = JsonConvert.DeserializeObject<User>(dataString);
-
-            return dataObjects;
+            return user;
         }
 
         public async Task<MessageAndStatusAndData<string>> RegisterAsync(RegistrationModel model)
