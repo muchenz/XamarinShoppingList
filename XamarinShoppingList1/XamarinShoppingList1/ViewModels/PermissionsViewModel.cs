@@ -19,8 +19,8 @@ namespace XamarinShoppingList1.ViewModels
         string _userName;
       
 
-        ListAggregationForPermission _selectedItem;
-        public ListAggregationForPermission SelectedItem
+        ListAggregationWithUsersPermission _selectedItem;
+        public ListAggregationWithUsersPermission SelectedItem
         {
             get { return _selectedItem; }
             set
@@ -96,7 +96,7 @@ namespace XamarinShoppingList1.ViewModels
                 return;
             }
            // InvitationNew.Name = SelectedItem.ListAggregatorEntity.Name;
-            int listAggrId = SelectedItem.ListAggregatorEntity.ListAggregatorId;
+            int listAggrId = SelectedItem.ListAggregator.ListAggregatorId;
 
 
             MessageAndStatus messageAndStatus=null;
@@ -132,7 +132,7 @@ namespace XamarinShoppingList1.ViewModels
             }
             await InitAsync();
 
-            SelectedItem = ListAggrForPerm.Where(a => a.ListAggregatorEntity.ListAggregatorId == SelectedItem.ListAggregatorEntity.ListAggregatorId).FirstOrDefault();
+            SelectedItem = ListAggrForPerm.Where(a => a.ListAggregator.ListAggregatorId == SelectedItem.ListAggregator.ListAggregatorId).FirstOrDefault();
 
             IsBusy2 = false;
         });
@@ -159,7 +159,7 @@ namespace XamarinShoppingList1.ViewModels
                             {
                                 try
                                 {
-                                    messageAndStatus = await _userService.ChangeUserPermission(item, SelectedItem.ListAggregatorEntity.ListAggregatorId);
+                                    messageAndStatus = await _userService.ChangeUserPermission(item, SelectedItem.ListAggregator.ListAggregatorId);
 
                                     if (messageAndStatus.Status != "OK")
                                         tempUserPermToListAggregation.PermissionForPicker = tempUserPermToListAggregation.OldValueForPickerCommand;
@@ -183,7 +183,7 @@ namespace XamarinShoppingList1.ViewModels
                     {
                         try
                         {
-                            messageAndStatus = await _userService.ChangeUserPermission(item, SelectedItem.ListAggregatorEntity.ListAggregatorId);
+                            messageAndStatus = await _userService.ChangeUserPermission(item, SelectedItem.ListAggregator.ListAggregatorId);
 
                             if (messageAndStatus.Status != "OK")
                                 tempUserPermToListAggregation.PermissionForPicker = tempUserPermToListAggregation.OldValueForPickerCommand;
@@ -230,9 +230,9 @@ namespace XamarinShoppingList1.ViewModels
                             {
                                 try
                                 {
-                                    messageAndStatus = await _userService.DeleteUserPermission(item, SelectedItem.ListAggregatorEntity.ListAggregatorId);
+                                    messageAndStatus = await _userService.DeleteUserPermission(item, SelectedItem.ListAggregator.ListAggregatorId);
                                     if (messageAndStatus.Status == "OK")
-                                        SelectedItem.Users.Remove(item);
+                                        SelectedItem.UsersPermToListAggr.Remove(item);
 
                                     if (string.IsNullOrEmpty(messageAndStatus.Message)) return;
 
@@ -261,10 +261,10 @@ namespace XamarinShoppingList1.ViewModels
                             { 
                                 try
                                 {
-                                    messageAndStatus = await _userService.DeleteUserPermission(item, SelectedItem.ListAggregatorEntity.ListAggregatorId);
+                                    messageAndStatus = await _userService.DeleteUserPermission(item, SelectedItem.ListAggregator.ListAggregatorId);
 
                                     if (messageAndStatus.Status == "OK")
-                                        SelectedItem.Users.Remove(item);
+                                        SelectedItem.UsersPermToListAggr.Remove(item);
 
                                     if (string.IsNullOrEmpty(messageAndStatus.Message)) return;
 
@@ -286,9 +286,9 @@ namespace XamarinShoppingList1.ViewModels
             }
         }
         
-      ObservableCollection<ListAggregationForPermission> _listAggrForPerm { get; set; }
+      ObservableCollection<ListAggregationWithUsersPermission> _listAggrForPerm { get; set; }
 
-        public ObservableCollection<ListAggregationForPermission> ListAggrForPerm
+        public ObservableCollection<ListAggregationWithUsersPermission> ListAggrForPerm
         {
             get { return _listAggrForPerm; }
             set
@@ -305,7 +305,7 @@ namespace XamarinShoppingList1.ViewModels
             {
                 var tempList =  await _userService.GetListAggregationForPermissionAsync(_userName);
 
-                ListAggrForPerm = new ObservableCollection<ListAggregationForPermission>(tempList);               
+                ListAggrForPerm = new ObservableCollection<ListAggregationWithUsersPermission>(tempList);               
             }
             catch
             {
