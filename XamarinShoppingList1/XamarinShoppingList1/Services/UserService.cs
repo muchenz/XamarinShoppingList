@@ -307,7 +307,8 @@ namespace XamarinShoppingList1.Services
             var querry = new QueryBuilder();
 
             querry.Add("listAggregationId", listAggregationId.ToString());
-            // querry.Add("password", password);
+
+            //var httpMethod = actionName == "DeleteUserPermission" ? HttpMethod.Delete : HttpMethod.Post;
 
             string serializedUser = JsonConvert.SerializeObject(userPermissionToList);
 
@@ -327,11 +328,25 @@ namespace XamarinShoppingList1.Services
 
             var responseStatusCode = response.StatusCode;
 
-            var responseBody = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
 
-            var message = JsonConvert.DeserializeObject<MessageAndStatus>(responseBody);
+                var problem = JsonConvert.DeserializeObject<ProblemDetails>(responseBody);
 
-            return await Task.FromResult(message);
+                return MessageAndStatus.Fail(problem.Title);
+            }
+
+            var message =  actionName switch
+            {
+                "AddUserPermission" => "User was added.",
+                "ChangeUserPermission" => "Permission has changed.",
+                "InviteUserPermission" => "Ivitation was added.",
+                "DeleteUserPermission" => "User permission was deleted.",
+                _ => throw new ArgumentException("Bad action name.")
+            };
+
+            return MessageAndStatus.Ok(message);
         }
 
         void SetRequestAuthorizationLevelHeader(HttpRequestMessage httpRequestMessage, int listAggregationId)
