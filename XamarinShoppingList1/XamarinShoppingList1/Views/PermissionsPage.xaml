@@ -62,7 +62,7 @@
 
 
             <CollectionView x:Name="ItemsCollectionView" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
-                ItemsSource="{Binding ListAggrForPerm}" SelectionChangedCommand="{Binding SelectionChangedCommand}" Margin="0" MinimumHeightRequest="0">
+                ItemsSource="{Binding ListAggrWithUsersPerm}" SelectionChangedCommand="{Binding SelectionChangedCommand}" Margin="0" MinimumHeightRequest="0">
                 <!--<CollectionView.Behaviors>
                         <local:EventToCommandBehavior EventName="SelectionChanged"
                                                   Command="{Binding SelectionChangedCommand}"
@@ -83,7 +83,7 @@
 
                         <StackLayout Padding="5" Margin="0"  >
                             <Frame  BackgroundColor="WhiteSmoke" >
-                                <Label Text="{Binding ListAggregatorEntity.ListAggregatorName}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                <Label Text="{Binding ListAggregator.ListAggregatorName}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                                    BackgroundColor="WhiteSmoke" VerticalOptions="Fill" 
                                 d:Text="Item descripton"
                                 LineBreakMode="NoWrap" 
@@ -109,7 +109,7 @@
         <RefreshView Grid.Row="2" IsVisible="{Binding IsNotVisibleInvitationFrame}" IsRefreshing="{Binding IsBusy2, Mode=TwoWay}" Command="{Binding LoadItemsCommand2}" Margin="0,0,0,0">
 
             <CollectionView x:Name="ItemsCollectionView2" Margin="0,0, 0, 0" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" SelectionMode="Single"
-                ItemsSource="{Binding SelectedItem.Users}" SelectionChangedCommand="{Binding SelectionChangedCommand}" >
+                ItemsSource="{Binding SelectedItem.UsersPermToListAggr}" SelectionChangedCommand="{Binding SelectionChangedCommand}" >
             <CollectionView.ItemTemplate>
                 <DataTemplate>
 

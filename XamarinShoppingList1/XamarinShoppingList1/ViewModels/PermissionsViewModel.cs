@@ -132,7 +132,7 @@ namespace XamarinShoppingList1.ViewModels
             }
             await InitAsync();
 
-            SelectedItem = ListAggrForPerm.Where(a => a.ListAggregator.ListAggregatorId == SelectedItem.ListAggregator.ListAggregatorId).FirstOrDefault();
+            SelectedItem = ListAggrWithUsersPerm.Where(a => a.ListAggregator.ListAggregatorId == SelectedItem.ListAggregator.ListAggregatorId).FirstOrDefault();
 
             IsBusy2 = false;
         });
@@ -286,14 +286,14 @@ namespace XamarinShoppingList1.ViewModels
             }
         }
         
-      ObservableCollection<ListAggregationWithUsersPermission> _listAggrForPerm { get; set; }
+      ObservableCollection<ListAggregationWithUsersPermission> _listAggrWithUsersPerm { get; set; }
 
-        public ObservableCollection<ListAggregationWithUsersPermission> ListAggrForPerm
+        public ObservableCollection<ListAggregationWithUsersPermission> ListAggrWithUsersPerm
         {
-            get { return _listAggrForPerm; }
+            get { return _listAggrWithUsersPerm; }
             set
             {
-                _listAggrForPerm = value;
+                _listAggrWithUsersPerm = value;
                 OnPropertyChanged();
 
             }
@@ -303,9 +303,9 @@ namespace XamarinShoppingList1.ViewModels
         {
             try
             {
-                var tempList =  await _userService.GetListAggregationForPermissionAsync(_userName);
+                var tempList =  await _userService.GetListAggrWithUsersPermAsync();
 
-                ListAggrForPerm = new ObservableCollection<ListAggregationWithUsersPermission>(tempList);               
+                ListAggrWithUsersPerm = new ObservableCollection<ListAggregationWithUsersPermission>(tempList);               
             }
             catch
             {
