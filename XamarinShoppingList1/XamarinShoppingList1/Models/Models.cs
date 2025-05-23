@@ -353,4 +353,30 @@ namespace XamarinShoppingList1.Models
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
+
+
+    public static class SiganalREventName
+    {
+        public const string ListItemEdited = nameof(ListItemEdited);
+        public const string ListItemAdded = nameof(ListItemAdded);
+        public const string ListItemDeleted = nameof(ListItemDeleted);
+        public const string InvitationAreChanged = nameof(InvitationAreChanged);
+        public const string DataAreChanged = nameof(DataAreChanged);
+    }
+
+    public class ListItemSignalREvent
+    {
+        public int ListItemId { get; set; }
+        public int ListAggregationId { get; set; }
+        public string SignalRId { get; set; }
+               
+    }
+
+    public class AddListItemSignalREvent : ListItemSignalREvent
+    {
+        public int ListId { get; }
+               
+    }
+    public class EditListItemSignalREvent : ListItemSignalREvent { }
+    public class DeleteListItemSignalREvent : ListItemSignalREvent { }
 }
