@@ -22,6 +22,10 @@
         
         
         <StackLayout>
+            <StackLayout  HorizontalOptions="Center" VerticalOptions="EndAndExpand" IsVisible="{Binding IsVisibleDeletedListLabel}">
+
+                <Label FontSize="Medium" TextColor="DodgerBlue" Text="Item was deleted or you don't have permission." ></Label>
+            </StackLayout>
             <StackLayout  HorizontalOptions="Center" VerticalOptions="EndAndExpand" IsVisible="{Binding IsVisibleDeleteLabel}">
 
                 <Label FontSize="Medium" TextColor="DodgerBlue" Text="Click on Item to delete." ></Label>

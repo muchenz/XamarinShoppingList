@@ -29,10 +29,10 @@
                 <VisualStateGroupList>
                     <VisualStateGroup x:Name="CommonStates">
                         <VisualState x:Name="Normal" >
-                        <VisualState.Setters>
-                            <Setter Property="BackgroundColor"
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
                                         Value="LightGray" />
-                        </VisualState.Setters>
+                            </VisualState.Setters>
                         </VisualState>
                         <VisualState x:Name="Selected">
                             <VisualState.Setters>
@@ -81,31 +81,36 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Delete"  Command="{Binding IsVisibleDeleteLabelCommand}" />
 
-        <ToolbarItem Text="Add/Edit"  Command="{Binding AddToolbarCommand}" />             
+        <ToolbarItem Text="Add/Edit"  Command="{Binding AddToolbarCommand}" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
-      
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <StackLayout  HorizontalOptions="Center" VerticalOptions="EndAndExpand" IsVisible="{Binding IsVisibleDeleteLabel}">
+            <StackLayout Orientation="Vertical">
+                <StackLayout  HorizontalOptions="Center" VerticalOptions="EndAndExpand" IsVisible="{Binding IsVisibleDeletedListLabel}">
 
-                <Label FontSize="Medium" TextColor="DodgerBlue" Text="Click on Item to delete." ></Label>
-            </StackLayout>
-            <Frame  IsVisible="{Binding IsVisibleAddItem}" BorderColor="Bisque"  BackgroundColor="Bisque" HasShadow="True" Padding="5">
-                <Frame  BorderColor="Bisque"  BackgroundColor="White" HasShadow="True" Padding="2">
-                    <StackLayout >
+                    <Label FontSize="Medium" TextColor="DodgerBlue" Text="Item was deleted or you don't have permission." ></Label>
+                </StackLayout>
+                <StackLayout  HorizontalOptions="Center" VerticalOptions="EndAndExpand" IsVisible="{Binding IsVisibleDeleteLabel}">
 
-                        <Entry Placeholder="Enter a name of list item" Text="{Binding AddListItemModel.ListItemName}"></Entry>
-                        <Button Text="Save" HorizontalOptions="Center" Command="{Binding AddListItemCommand}"  ></Button>
+                    <Label FontSize="Medium" TextColor="DodgerBlue" Text="Click on Item to delete." ></Label>
+                </StackLayout>
+                <Frame  IsVisible="{Binding IsVisibleAddItem}" BorderColor="Bisque"  BackgroundColor="Bisque" HasShadow="True" Padding="5">
+                    <Frame  BorderColor="Bisque"  BackgroundColor="White" HasShadow="True" Padding="2">
+                        <StackLayout >
 
-                    </StackLayout>
+                            <Entry Placeholder="Enter a name of list item" Text="{Binding AddListItemModel.ListItemName}"></Entry>
+                            <Button Text="Save" HorizontalOptions="Center" Command="{Binding AddListItemCommand}"  ></Button>
+
+                        </StackLayout>
+                    </Frame>
                 </Frame>
-            </Frame>
-
+            </StackLayout>
 
 
 

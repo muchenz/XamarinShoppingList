@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Unity;
 using Unity.Resolution;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using XamarinShoppingList1.Helpers;
@@ -216,8 +217,17 @@ namespace XamarinShoppingList1.ViewModels
         {
             MessagingCenter.Subscribe<ListAggregationViewModel, User>(this, "New Data", (sender, arg) =>
             {
-                GetNewDataFromUser(arg);
-
+                try
+                {
+                    GetNewDataFromUser(arg);
+                }
+                catch (ArgumentNullException ex)
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        _ = NavigateWhenArgumentNullException(ex);
+                    });
+                }
                 if (IsBusy) IsBusy = false;
 
             });
@@ -225,6 +235,26 @@ namespace XamarinShoppingList1.ViewModels
             GetNewDataFromUser(App.User);
 
         }
+        public bool _isVisibleDeletedListLabel = false;
+        public bool IsVisibleDeletedListLabel { get { return _isVisibleDeletedListLabel; } set { SetProperty(ref _isVisibleDeletedListLabel, value); } }
+
+        async Task NavigateWhenArgumentNullException(ArgumentNullException ex)
+        {
+            IsVisibleDeletedListLabel = true;
+            await Task.Delay(2000);
+            if (ex.ParamName == "ListAggr")
+            {
+                var a = Navigation.NavigationStack.Count;
+                Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+                await Navigation.PopAsync();
+
+            }
+            else
+            {
+                await Navigation.PopAsync();
+            }
+        }
+
         ListAggregator _listAggr;
         public ListAggregator ListAggr
         {
@@ -237,12 +267,21 @@ namespace XamarinShoppingList1.ViewModels
 
             try
             {
-                var temLlist = arg.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault()
-               .Lists.Where(a => a.ListId == _list.ListId).FirstOrDefault().ListItems.ToList();
-
+                var aaa = arg;
+                var a = arg.ListAggregators;
+                var b = arg.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault();
                 ListAggr = arg.ListAggregators.Where(a => a.ListAggregatorId == _listAggregator.ListAggregatorId).FirstOrDefault();
+                if (ListAggr == null) throw new ArgumentNullException("ListAggr");
 
-                if (temLlist == null)
+                var tempList = ListAggr.Lists.Where(a => a.ListId == _list.ListId).FirstOrDefault();
+                if (tempList == null) throw new ArgumentNullException("List");
+
+
+                var tempListItem = tempList.ListItems.ToList();
+
+
+
+                if (tempListItem == null)
                 {
 
                     //ListItems = new ObservableCollection<ListItem>();
@@ -253,17 +292,21 @@ namespace XamarinShoppingList1.ViewModels
                 {
                     //_listItemsTemp = new List<ListItem>(temLlist);
 
-                    ListItems.CollectionChanged-= ListItems_CollectionChanged;
+                    ListItems.CollectionChanged -= ListItems_CollectionChanged;
                     ListItems.Clear();
                     //ListItems = new ObservableCollection<ListItem>(temLlist);
-                    temLlist.ForEach(a => ListItems.Add(a));
-                    ListItems.CollectionChanged += ListItems_CollectionChanged;                  
+                    tempListItem.ForEach(a => ListItems.Add(a));
+                    ListItems.CollectionChanged += ListItems_CollectionChanged;
                 }
 
             }
-            catch (Exception ex)
+            catch (ArgumentNullException)
             {
-                    ListItems.Clear();
+                throw;
+            }
+            catch
+            {
+                ListItems.Clear();
 
                 //ListItems = new ObservableCollection<ListItem>();
 

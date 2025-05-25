@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Unity;
 using Unity.Resolution;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using XamarinShoppingList1.Helpers;
 using XamarinShoppingList1.Models;
@@ -106,9 +107,7 @@ namespace XamarinShoppingList1.ViewModels
                     else
                     {
                         IsVisibleDeleteLabel = true;
-
                     }
-
 
                 });
 
@@ -222,7 +221,7 @@ namespace XamarinShoppingList1.ViewModels
                 if (temPlist==null)
                 {
                     List = new ObservableCollection<List>();
-                    temPlist.Lists = List;
+                    NavigateWhenListArgIsNull();
 
                 }
                 else
@@ -231,10 +230,23 @@ namespace XamarinShoppingList1.ViewModels
                     temPlist.Lists = List;
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 List = new ObservableCollection<List>();
             }
+        }
+
+        public bool _isVisibleDeletedListLabel = false;
+        public bool IsVisibleDeletedListLabel { get { return _isVisibleDeletedListLabel; } set { SetProperty(ref _isVisibleDeletedListLabel, value); } }
+
+        void NavigateWhenListArgIsNull()
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                IsVisibleDeletedListLabel = true;
+                await Task.Delay(2000);
+                await Navigation.PopAsync();
+            });
         }
 
         protected override async  Task OnAppearingAsync()
