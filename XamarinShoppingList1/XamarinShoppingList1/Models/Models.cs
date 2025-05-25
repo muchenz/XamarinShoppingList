@@ -26,7 +26,7 @@ namespace XamarinShoppingList1.Models
     {
         public DisplayAlertMessage()
         {
-            
+
         }
 
         public string Title { get; set; }
@@ -86,7 +86,7 @@ namespace XamarinShoppingList1.Models
 
     }
 
-   
+
 
 
     public class Invitation : IModelItemView
@@ -130,15 +130,21 @@ namespace XamarinShoppingList1.Models
             set { User.EmailAddress = value; }
         }
 
-        public int PermissionForPicker { get { return Permission - 1; } set { _oldValueForPicker = Permission; Permission = value + 1;
+        public int PermissionForPicker
+        {
+            get { return Permission - 1; }
+            set
+            {
+                _oldValueForPicker = Permission; Permission = value + 1;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PermissionForPicker"));
-            } }
+            }
+        }
 
         int _oldValueForPicker;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public int OldValueForPickerCommand =>  _oldValueForPicker-1;
+        public int OldValueForPickerCommand => _oldValueForPicker - 1;
     }
 
     public class User
@@ -182,9 +188,11 @@ namespace XamarinShoppingList1.Models
         public string Name
         {
             get { return ListAggregatorName; }
-            set { ListAggregatorName = value; 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListAggregator.ListAggregatorName)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListAggregator.Name)));
+            set
+            {
+                ListAggregatorName = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListAggregator.ListAggregatorName)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListAggregator.Name)));
 
             }
         }
@@ -249,9 +257,11 @@ namespace XamarinShoppingList1.Models
         public string Name
         {
             get { return ListName; }
-            set { ListName = value; 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(List.ListName)));
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(List.Name)));
+            set
+            {
+                ListName = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(List.ListName)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(List.Name)));
 
             }
         }
@@ -270,7 +280,7 @@ namespace XamarinShoppingList1.Models
     public interface IModelItemView : IModelItemBase
     {
 
-         string Name { get; set; }
+        string Name { get; set; }
 
         //public int Id { get; set; }
 
@@ -279,7 +289,7 @@ namespace XamarinShoppingList1.Models
     public interface IModelItemOrder : IModelItemBase
     {
 
-         int Order { get; set; }
+        int Order { get; set; }
 
         //public int Id { get; set; }
 
@@ -288,7 +298,7 @@ namespace XamarinShoppingList1.Models
     public interface IModelItemBase
     {
 
-         int Id { get; }
+        int Id { get; }
     }
 
 
@@ -297,15 +307,17 @@ namespace XamarinShoppingList1.Models
         public int ListItemId { get; set; }
 
         public int Order { get; set; }
-        
+
 
         private int _stete;
 
         public int State
         {
             get { return _stete; }
-            set { _stete = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs( nameof(ListItem.State)));
+            set
+            {
+                _stete = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListItem.State)));
 
             }
         }
@@ -317,7 +329,9 @@ namespace XamarinShoppingList1.Models
         public string ListItemName
         {
             get { return _listItemName; }
-            set { _listItemName = value; 
+            set
+            {
+                _listItemName = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListItem.ListItemName)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListItem.Name)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListItem.NameForView)));
@@ -328,8 +342,10 @@ namespace XamarinShoppingList1.Models
         public string Name
         {
             get { return ListItemName; }
-            set { ListItemName = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs( nameof(ListItem.Name)));
+            set
+            {
+                ListItemName = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListItem.Name)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListItem.ListItemName)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ListItem.NameForView)));
 
@@ -364,19 +380,28 @@ namespace XamarinShoppingList1.Models
         public const string DataAreChanged = nameof(DataAreChanged);
     }
 
+
+    public class SignaREnvelope
+    {
+        public string SignalRId { get; set; }
+        public string SiglREventName { get; set; }
+        public string SerializedEvent { get; set; }
+    }
+
+
     public class ListItemSignalREvent
     {
         public int ListItemId { get; set; }
         public int ListAggregationId { get; set; }
-        public string SignalRId { get; set; }
-               
+
     }
 
-    public class AddListItemSignalREvent : ListItemSignalREvent
+ 
+    public class ListItemAddedSignalREvent : ListItemSignalREvent
     {
         public int ListId { get; }
-               
+
     }
-    public class EditListItemSignalREvent : ListItemSignalREvent { }
-    public class DeleteListItemSignalREvent : ListItemSignalREvent { }
+    public class ListItemEditedSignalREvent : ListItemSignalREvent { }
+    public class ListItemDeletedSignalREvent : ListItemSignalREvent { }
 }
